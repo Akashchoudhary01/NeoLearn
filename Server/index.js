@@ -10,6 +10,9 @@ app.get("/" , (req , res)=>{
     res.send("<h1>Jai Shree Ram<h1/>")
 })
 
+app.get("/haha" , (req , res)=>{
+    res.json("hello");
+})
 app.listen(PORT , ()=>{
     console.log(`server is listning on http://localhost:${PORT}`);
     
