@@ -12,6 +12,7 @@ app.use(cors ({
 }));
 
 app.use(cookieParser());
+app.use(cookieParser());
 
 //3 route
 
