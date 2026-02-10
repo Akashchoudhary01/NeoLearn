@@ -1,19 +1,11 @@
 import { configDotenv } from 'dotenv';
 import { app } from './app.js';
-
+import { connectionToDB } from './config/dbConnection.js';
 configDotenv();
-
-
 const PORT = process.env.PORT || 8001;
-
-app.get("/" , (req , res)=>{
-    res.send("<h1>Jai Shree Ram<h1/>")
-})
-
-app.get("/haha" , (req , res)=>{
-    res.json("hello");
-})
-app.listen(PORT , ()=>{
+app.listen(PORT ,async()=>{
+     await connectionToDB();
+   
     console.log(`server is listning on http://localhost:${PORT}`);
     
 })
