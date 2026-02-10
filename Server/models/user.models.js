@@ -75,6 +75,9 @@ userSchema.methods = {
       }
     );
   },
+  comparePassword : async function(planTextpassword){
+    return await bcrypt.compare(planTextpassword , this.password)
+  }
 };
 
 
