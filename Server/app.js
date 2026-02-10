@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import userRoutes from './routes/user.route.js';
 import cookieParser from 'cookie-parser';
+import errorMiddleware from './middleware/error.middleware.js';
 
 export const app = express();
 
@@ -20,4 +21,5 @@ app.use(morgan('dev'));
 app.use('/api/v1/user' , userRoutes);
 
 
-//for all unmatched routes
+//error middleWare
+app.use(errorMiddleware);
