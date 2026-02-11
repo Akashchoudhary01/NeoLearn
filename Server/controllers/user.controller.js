@@ -1,5 +1,7 @@
 import USER from "../models/user.models.js";
 import AppError from "../utils/error.js";
+import cloudinary from 'cloudinary';
+import fs from "fs";
 
 const cookieOption = {
     maxAge : 7 * 24 * 60 * 60 *1000,
@@ -7,6 +9,9 @@ const cookieOption = {
     secure : true
 
 }
+///////////////////
+// register
+///////////////////
 const register = async (req, res, next) => {
   try {
     const { fullName, email, password } = req.body;
@@ -30,6 +35,27 @@ const register = async (req, res, next) => {
         secure_url: process.env.CLOUDINARY_URL,
       },
     });
+
+    if(req.file){
+      const result = await cloudinary.v2.uploader.upload(req.file.path , {
+        folder : 'neoLearn',
+        width : 250,
+        height : 250,
+        gravity : 'face',
+        crop : 'fill'
+
+      });
+      if(result){
+        user.avatar.public_id = result.public_id;
+        user.avatar.secure_url = result.secure_url;
+
+        //remove the file from the server
+         await fs.promises.unlink(
+      `uploads/${req.file.filename}`
+    );
+      };
+
+    }
 
     if (!user) {
       return next(
@@ -56,6 +82,8 @@ const register = async (req, res, next) => {
   }
 };
 
+///////////////login/////////////////
+
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -69,15 +97,15 @@ const login = async (req, res, next) => {
     if (!user || !(await user.comparePassword(password))) {
       return next(new AppError("Invalid credentials", 401));
     }
-
+    
     const token = user.generateJWTtoken();
-
+    
     // Hide password
     user.password = undefined;
-
+    
     // Send cookie
     res.cookie("token", token, cookieOption);
-
+    
     res.status(200).json({
       success: true,
       message: "User logged in successfully!",
@@ -88,6 +116,7 @@ const login = async (req, res, next) => {
   }
 };
 
+///////////////logout/////////////////
 const logout = (req, res) => {
   res.cookie("token", null, {
     maxAge: 0,
@@ -95,13 +124,14 @@ const logout = (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
-
+  
   res.status(200).json({
     success: true,
     message: "User logged out successfully!",
   });
 };
 
+///////////////getprofile/////////////////
 const getprofile = async(req , res)=>{
     try{
 
