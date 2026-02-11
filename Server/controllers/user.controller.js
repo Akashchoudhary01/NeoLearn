@@ -16,16 +16,19 @@ const register = async (req, res, next) => {
   try {
     const { fullName, email, password } = req.body;
 
+    // Validation
     if (!fullName || !email || !password) {
       return next(new AppError("Every field is required", 400));
     }
 
+    // Check existing user
     const userExists = await USER.findOne({ email });
 
     if (userExists) {
       return next(new AppError("Email already registered", 400));
     }
 
+    // Create user
     const user = await USER.create({
       fullName,
       email,
@@ -36,25 +39,29 @@ const register = async (req, res, next) => {
       },
     });
 
-    if(req.file){
-      const result = await cloudinary.v2.uploader.upload(req.file.path , {
-        folder : 'neoLearn',
-        width : 250,
-        height : 250,
-        gravity : 'face',
-        crop : 'fill'
+    // Upload avatar if exists
+    if (req.file) {
+      const result = await cloudinary.v2.uploader.upload(
+        req.file.path,
+        {
+          folder: "neoLearn",
+          width: 250,
+          height: 250,
+          gravity: "face",
+          crop: "fill",
+        }
+      );
 
-      });
-      if(result){
+      if (result) {
         user.avatar.public_id = result.public_id;
         user.avatar.secure_url = result.secure_url;
 
-        //remove the file from the server
-         await fs.promises.unlink(
-      `uploads/${req.file.filename}`
-    );
-      };
+        await user.save(); // ✅ save avatar
 
+        // Delete local file
+        await fs.promises.unlink(req.file.path);
+        await fs.rm(req.file.filename);
+      }
     }
 
     if (!user) {
@@ -72,15 +79,18 @@ const register = async (req, res, next) => {
     // Send cookie
     res.cookie("token", token, cookieOption);
 
-    res.status(201).json({
+    // ✅ IMPORTANT: return
+    return res.status(201).json({
       success: true,
       message: "User registered successfully!",
       user,
     });
+
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
+
 
 ///////////////login/////////////////
 
