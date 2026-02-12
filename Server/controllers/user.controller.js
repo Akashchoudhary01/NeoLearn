@@ -14,7 +14,7 @@ const cookieOption = {
 ///////////////////
 const register = async (req, res, next) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password , avatar } = req.body;
 
     // Validation
     if (!fullName || !email || !password) {
@@ -34,12 +34,14 @@ const register = async (req, res, next) => {
       email,
       password,
       avatar: {
-        public_id: email,
-        secure_url: process.env.CLOUDINARY_URL,
+        public_id: "default",
+        secure_url: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
       },
     });
 
     // Upload avatar if exists
+    // console.log("File:", req.file);
+
     if (req.file) {
       const result = await cloudinary.v2.uploader.upload(
         req.file.path,
@@ -59,8 +61,9 @@ const register = async (req, res, next) => {
         await user.save(); // ✅ save avatar
 
         // Delete local file
-        await fs.promises.unlink(req.file.path);
-        await fs.rm(req.file.filename);
+        // await fs.promises.unlink(req.file.path);
+        await fs.promises.unlink(`uploads/${req.file.filename}`);
+
       }
     }
 

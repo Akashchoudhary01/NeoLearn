@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
       enum: ["ADMIN", "USER"],
       default: "USER",
     },
-    avtar : {
+    avatar : {
         public_id :{
             type : String
         },
@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema(
 //Password encrypt using BCRYPT
 userSchema.pre('save' , async function(next){
     if(!this.isModified('password')){
-        return next();
+       return next;
     }
     this.password = await bcrypt.hash(this.password , 16);
 })

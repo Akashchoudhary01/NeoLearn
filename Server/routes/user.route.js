@@ -5,7 +5,7 @@ import uploads from '../middleware/multer.middleware.js';
 
 const router = Router();
 
-router.post("/register" , uploads.single("avatar") ,  register);
+router.post("/register" , uploads.single('avatar') ,  register);
 router.post("/login" , login);
 router.get("/logout" , logout);
 router.get("/me" , isLoggedIn ,  getprofile);
