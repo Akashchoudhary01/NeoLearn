@@ -1,20 +1,20 @@
 import USER from "../models/user.models.js";
 import AppError from "../utils/error.js";
-import cloudinary from 'cloudinary';
+import cloudinary from "cloudinary";
 import fs from "fs";
+import sendEmail from '../utils/sendEmail.js'
 
 const cookieOption = {
-    maxAge : 7 * 24 * 60 * 60 *1000,
-    httpOnly : true,
-    secure : true
-
-}
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  httpOnly: true,
+  secure: true,
+};
 ///////////////////
 // register
 ///////////////////
 const register = async (req, res, next) => {
   try {
-    const { fullName, email, password , avatar } = req.body;
+    const { fullName, email, password, avatar } = req.body;
 
     // Validation
     if (!fullName || !email || !password) {
@@ -43,16 +43,13 @@ const register = async (req, res, next) => {
     // console.log("File:", req.file);
 
     if (req.file) {
-      const result = await cloudinary.v2.uploader.upload(
-        req.file.path,
-        {
-          folder: "neoLearn",
-          width: 250,
-          height: 250,
-          gravity: "face",
-          crop: "fill",
-        }
-      );
+      const result = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "neoLearn",
+        width: 250,
+        height: 250,
+        gravity: "face",
+        crop: "fill",
+      });
 
       if (result) {
         user.avatar.public_id = result.public_id;
@@ -63,13 +60,12 @@ const register = async (req, res, next) => {
         // Delete local file
         // await fs.promises.unlink(req.file.path);
         await fs.promises.unlink(`uploads/${req.file.filename}`);
-
       }
     }
 
     if (!user) {
       return next(
-        new AppError("User registration failed, please try again", 400)
+        new AppError("User registration failed, please try again", 400),
       );
     }
 
@@ -88,12 +84,10 @@ const register = async (req, res, next) => {
       message: "User registered successfully!",
       user,
     });
-
   } catch (error) {
     return next(error);
   }
 };
-
 
 ///////////////login/////////////////
 
@@ -110,15 +104,15 @@ const login = async (req, res, next) => {
     if (!user || !(await user.comparePassword(password))) {
       return next(new AppError("Invalid credentials", 401));
     }
-    
+
     const token = user.generateJWTtoken();
-    
+
     // Hide password
     user.password = undefined;
-    
+
     // Send cookie
     res.cookie("token", token, cookieOption);
-    
+
     res.status(200).json({
       success: true,
       message: "User logged in successfully!",
@@ -137,7 +131,7 @@ const logout = (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
-  
+
   res.status(200).json({
     success: true,
     message: "User logged out successfully!",
@@ -145,27 +139,63 @@ const logout = (req, res) => {
 };
 
 ///////////////getprofile/////////////////
-const getprofile = async(req , res)=>{
-    try{
+const getprofile = async (req, res) => {
+  try {
+    const userID = req.user.id;
+    const user = await USER.findById(userID);
 
-        
-        const userID = req.user.id;
-        const user = await USER.findById(userID);
-        
-        res.status(200).json({
-            success : true,
-            message : 'user details',
-            user
-        })
-    }catch(e){
-        return next(new AppError('Failed to fetch Profile' , 400))
-    }
+    res.status(200).json({
+      success: true,
+      message: "user details",
+      user,
+    });
+  } catch (e) {
+    return next(new AppError("Failed to fetch Profile", 400));
+  }
+};
 
-}
+/////////////////
+//Forgot-password
 
-export {
-    register,
-    login,
-    logout,
-    getprofile
-}
+const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return next(new AppError("Email is Required"), 400);
+  }
+
+  const user = req.USER.findOne({ email });
+
+  if (!user) {
+    return next(new AppError("Email is not Registered"), 400);
+  }
+
+  const userToken = await generateResetPasswordToken();
+
+  await user.save();
+
+  //
+  const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+
+  const subject  = "reset Password"
+  const message = `You Can Reset Your Password By Clicking ${resetPasswordURL}`
+
+  try {
+    await sendEmail(email, subject, message);
+
+    res.status(200).json({
+      success: true,
+      message: `Reset Password Token Has Been Send To ${user.email} successfully`,
+    });
+  } catch (e) {
+    user.forgotPasswordExpiry = undefined;
+    user.forgotPasswordToken = undefined;
+
+    await user.save();
+    return next(new AppError(e.message), 500);
+  }
+};
+const resetPassword = async (req, res) => {};
+
+export { register, login, logout, getprofile, forgotPassword, resetPassword };
