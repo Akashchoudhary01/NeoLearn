@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {register , login , logout , getprofile, forgotPassword, resetPassword , ChangePassword} from '../controllers/user.controller.js'
+import {register , login , logout , getprofile, forgotPassword, resetPassword , ChangePassword , updateProfiles} from '../controllers/user.controller.js'
 import isLoggedIn from '../middleware/auth.middleware.js';
 import uploads from '../middleware/multer.middleware.js';
 
@@ -12,5 +12,6 @@ router.get("/me" , isLoggedIn ,  getprofile);
 router.post("/reset" , forgotPassword);
 router.post("/reset/:token" , resetPassword);
 router.post("/changepassword" ,isLoggedIn ,ChangePassword);
+router.put("/update" ,isLoggedIn , uploads.single('avatar') , updateProfile);
 
 export default router;

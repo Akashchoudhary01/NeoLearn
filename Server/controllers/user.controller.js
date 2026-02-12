@@ -43,24 +43,31 @@ const register = async (req, res, next) => {
     // Upload avatar if exists
     // console.log("File:", req.file);
 
+
     if (req.file) {
-      const result = await cloudinary.v2.uploader.upload(req.file.path, {
-        folder: "neoLearn",
-        width: 250,
-        height: 250,
-        gravity: "face",
-        crop: "fill",
-      });
-
-      if (result) {
-        user.avatar.public_id = result.public_id;
-        user.avatar.secure_url = result.secure_url;
-
-        await user.save(); // ✅ save avatar
-
-        // Delete local file
-        // await fs.promises.unlink(req.file.path);
-        await fs.promises.unlink(`uploads/${req.file.filename}`);
+      try {
+        
+        const result = await cloudinary.v2.uploader.upload(req.file.path, {
+          folder: "neoLearn",
+          width: 250,
+          height: 250,
+          gravity: "face",
+          crop: "fill",
+        });
+        
+        if (result) {
+          user.avatar.public_id = result.public_id;
+          user.avatar.secure_url = result.secure_url;
+          
+          await user.save(); // ✅ save avatar
+          
+          // Delete local file
+          // await fs.promises.unlink(req.file.path);
+          await fs.promises.unlink(`uploads/${req.file.filename}`);
+        }
+      } catch (e) {
+        return next (new AppError(e.message , 400));
+        
       }
     }
 
@@ -255,4 +262,49 @@ const userID = req.user.id;
 
 }
 
-export { register, login, logout, getprofile, forgotPassword, resetPassword , ChangePassword };
+const updateProfile = async(req , res , next)=>{
+  const {fullName} = req.body;
+  const userId = req.user.id;
+
+  const user = USER.findById(userId);
+
+  if(!user){
+    return next (new AppError("User Does not exists" , 400));
+  }
+  if(req.fullName){
+      user.fullName = fullName;
+  }
+  if(req.file){
+    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+          try {
+        
+        const result = await cloudinary.v2.uploader.upload(req.file.path, {
+          folder: "neoLearn",
+          width: 250,
+          height: 250,
+          gravity: "face",
+          crop: "fill",
+        });
+        
+        if (result) {
+          user.avatar.public_id = result.public_id;
+          user.avatar.secure_url = result.secure_url;
+          
+          await user.save(); // ✅ save avatar
+          
+          // Delete local file
+          // await fs.promises.unlink(req.file.path);
+          await fs.promises.unlink(`uploads/${req.file.filename}`);
+        }
+      } catch (e) {
+        return next (new AppError(e.message , 400));
+        
+      }
+
+  }
+
+}
+
+
+
+export { register, login, logout, getprofile, forgotPassword, resetPassword , ChangePassword , updateProfile};
