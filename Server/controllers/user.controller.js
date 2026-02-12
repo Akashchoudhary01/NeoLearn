@@ -262,48 +262,66 @@ const userID = req.user.id;
 
 }
 
-const updateProfile = async(req , res , next)=>{
-  const {fullName} = req.body;
+const updateProfile = async (req, res, next) => {
+  const { fullName } = req.body;
   const userId = req.user.id;
 
-  const user = USER.findById(userId);
+  const user = await USER.findById(userId);
 
-  if(!user){
-    return next (new AppError("User Does not exists" , 400));
+  if (!user) {
+    return next(new AppError("User does not exist", 400));
   }
-  if(req.fullName){
-      user.fullName = fullName;
+
+  // Update name
+  if (fullName) {
+    user.fullName = fullName;
   }
-  if(req.file){
-    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
-          try {
+
+  // If new image uploaded
+  if (req.file) {
+
+    // ✅ Delete old image only if exists
+    if (user.avatar && user.avatar.public_id) {
+      await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+    }
+
+    try {
+      const result = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "neoLearn",
+        width: 250,
+        height: 250,
+        gravity: "face",
+        crop: "fill",
+      });
+
+      if (result) {
+
+        // ✅ Create avatar object
+        user.avatar = {
+          public_id: result.public_id,
+          secure_url: result.secure_url,
+        };
+
+        await user.save();
         
-        const result = await cloudinary.v2.uploader.upload(req.file.path, {
-          folder: "neoLearn",
-          width: 250,
-          height: 250,
-          gravity: "face",
-          crop: "fill",
-        });
-        
-        if (result) {
-          user.avatar.public_id = result.public_id;
-          user.avatar.secure_url = result.secure_url;
-          
-          await user.save(); // ✅ save avatar
-          
-          // Delete local file
-          // await fs.promises.unlink(req.file.path);
-          await fs.promises.unlink(`uploads/${req.file.filename}`);
-        }
-      } catch (e) {
-        return next (new AppError(e.message , 400));
-        
+        // Delete local file
+        await fs.promises.unlink(`uploads/${req.file.filename}`);
       }
-
+      
+    } catch (e) {
+      return next(new AppError(e.message, 400));
+    }
   }
+  
+  await user.save();
+  // ✅ Send response (you were missing this)
+  res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    user,
+  });
+};
 
-}
 
 
 

@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {register , login , logout , getprofile, forgotPassword, resetPassword , ChangePassword , updateProfiles} from '../controllers/user.controller.js'
+import {register , login , logout , getprofile, forgotPassword, resetPassword , ChangePassword , updateProfile} from '../controllers/user.controller.js'
 import isLoggedIn from '../middleware/auth.middleware.js';
 import uploads from '../middleware/multer.middleware.js';
 
