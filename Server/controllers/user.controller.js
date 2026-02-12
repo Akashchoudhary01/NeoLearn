@@ -225,12 +225,13 @@ const resetPassword = async (req, res, next) => {
 
 const ChangePassword = async(req , res , next)=>{
   const {oldPassword , newPassword} = req.body;
-  const id = req.user.id;
+const userID = req.user.id;
+    
 
   if(!oldPassword || !newPassword){
     return next(new AppError('Every Field is Mendatory' , 400));
   }
-  const user = await USER.findById(id).select('+password');
+  const user = await USER.findById(userID).select('+password');
 
   if(!user){
     return next (new AppError('User does Not exists' , 400) );
