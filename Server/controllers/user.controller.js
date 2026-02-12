@@ -2,7 +2,8 @@ import USER from "../models/user.models.js";
 import AppError from "../utils/error.js";
 import cloudinary from "cloudinary";
 import fs from "fs";
-import sendEmail from '../utils/sendEmail.js'
+import sendEmail from "../utils/sendEmail.js";
+import crypto from 'crypto';
 
 const cookieOption = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -164,22 +165,21 @@ const forgotPassword = async (req, res, next) => {
     return next(new AppError("Email is Required"), 400);
   }
 
-  const user = req.USER.findOne({ email });
+  const user = await USER.findOne({ email });
 
   if (!user) {
     return next(new AppError("Email is not Registered"), 400);
   }
 
-  const userToken = await generateResetPasswordToken();
+  const userToken = await user.generateResetPasswordToken();
 
   await user.save();
 
   //
-  const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+  const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${userToken}`;
 
-
-  const subject  = "reset Password"
-  const message = `You Can Reset Your Password By Clicking ${resetPasswordURL}`
+  const subject = "reset Password";
+  const message = `You Can Reset Your Password By Clicking ${resetPasswordURL}`;
 
   try {
     await sendEmail(email, subject, message);
@@ -196,6 +196,31 @@ const forgotPassword = async (req, res, next) => {
     return next(new AppError(e.message), 500);
   }
 };
-const resetPassword = async (req, res) => {};
+const resetPassword = async (req, res, next) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const forgotPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  const user = await USER.findOne({
+    forgotPasswordExpiry: { $gt: Date.now() },
+    forgotPasswordToken,
+  });
+
+  if (!user) {
+    return next(new AppError("Token Expired ! Please Try Again"), 400);
+  }
+
+  user.password = password;
+  user.forgotPasswordExpiry = undefined;
+  user.forgotPasswordToken = undefined;
+
+  await user.save();
+
+  return res.status(200).json({
+    success: true,
+    message: "Your Message Changed SuccessFully !",
+  });
+};
 
 export { register, login, logout, getprofile, forgotPassword, resetPassword };

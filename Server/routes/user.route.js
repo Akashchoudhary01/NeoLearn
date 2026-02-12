@@ -6,10 +6,10 @@ import uploads from '../middleware/multer.middleware.js';
 const router = Router();
 
 router.post("/register" , uploads.single('avatar') ,  register);
-router.post("/login" , login);
+router.post("/login" , login); 
 router.get("/logout" , logout);
 router.get("/me" , isLoggedIn ,  getprofile);
-router.post("/forgot-password" , forgotPassword);
-router.post("/reset-password" , resetPassword);
+router.post("/reset" , forgotPassword);
+router.post("/reset/:token" , resetPassword);
 
 export default router;

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { urlencoded } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import userRoutes from './routes/user.route.js';
@@ -8,6 +8,7 @@ import errorMiddleware from './middleware/error.middleware.js';
 export const app = express();
 
 app.use(express.json());
+app.use(urlencoded({extended : true}));
 
 app.use(cors ({
     origin : [process.env.FRONTEND_URL],
