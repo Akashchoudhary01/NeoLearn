@@ -223,4 +223,35 @@ const resetPassword = async (req, res, next) => {
   });
 };
 
-export { register, login, logout, getprofile, forgotPassword, resetPassword };
+const ChangePassword = async(req , res , next)=>{
+  const {oldPassword , newPassword} = req.body;
+  const id = req.user.id;
+
+  if(!oldPassword || !newPassword){
+    return next(new AppError('Every Field is Mendatory' , 400));
+  }
+  const user = await USER.findById(id).select('+password');
+
+  if(!user){
+    return next (new AppError('User does Not exists' , 400) );
+  }
+
+  const isPasswordValid = user.comparePassword(oldPassword);
+
+  if(!isPasswordValid){
+    return next (new AppError('Invalid Password' ,400));
+  }
+  user.password = newPassword;
+
+  await user.save();
+
+  user.password = undefined;
+
+  res.status(200).json({
+    success : true,
+    message : 'password changes Successfully'
+  })
+
+}
+
+export { register, login, logout, getprofile, forgotPassword, resetPassword , ChangePassword };
