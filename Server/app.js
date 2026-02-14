@@ -21,7 +21,7 @@ app.use(morgan('dev'));
 
 //3 route
 app.use('/api/v1/user' , userRoutes);
-app.use('/api/v1/course' , courseRouter);
+app.use('/api/v1/courses' , courseRouter);
 
 
 //error middleWare

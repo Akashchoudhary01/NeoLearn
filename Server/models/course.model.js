@@ -44,7 +44,7 @@ const courseSchema = new Schema(
     ],
     noOfLecture: {
       type: Number,
-      default : 0;
+      default : 0,
     },
     thumbnail: {
       public_id: {
