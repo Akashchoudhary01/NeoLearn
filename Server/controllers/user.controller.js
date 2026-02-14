@@ -314,6 +314,11 @@ const updateProfile = async (req, res, next) => {
   }
   
   await user.save();
+
+
+
+
+  
   // ✅ Send response (you were missing this)
   res.status(200).json({
     success: true,

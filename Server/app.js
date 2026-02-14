@@ -4,6 +4,7 @@ import cors from 'cors';
 import userRoutes from './routes/user.route.js';
 import cookieParser from 'cookie-parser';
 import errorMiddleware from './middleware/error.middleware.js';
+import courseRouter from './routes/course.route.js';
 
 export const app = express();
 
@@ -20,6 +21,7 @@ app.use(morgan('dev'));
 
 //3 route
 app.use('/api/v1/user' , userRoutes);
+app.use('/api/v1/course' , courseRouter);
 
 
 //error middleWare
