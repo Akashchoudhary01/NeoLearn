@@ -128,6 +128,7 @@ const updateCourse = async (req, res, next) => {
     if (req.file) {
       if (course.thumbnail && course.thumbnail.public_id) {
         await cloudinary.v2.uploader.destroy(course.thumbnail.public_id);
+      }
 
         //uploading the new Thumbnail
 
@@ -144,11 +145,12 @@ const updateCourse = async (req, res, next) => {
 
           await course.save();
 
-          fs.promises.unlink(`uploads/${req.file.filename}`);
+          await fs.promises.unlink(`uploads/${req.file.filename}`);
+          
         } catch (e) {
           return next(new AppError("Unable to update Thumbnail", 400));
         }
-      }
+      
     }
 
     await course.save();
