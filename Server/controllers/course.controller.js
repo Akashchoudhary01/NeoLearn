@@ -1,7 +1,12 @@
+import fs from 'fs';
 import COURSE from "../models/course.model.js";
 import AppError from "../utils/error.js";
+import cloudinary from 'cloudinary';
 
+/////////////////////
+/////////////////////
 const getAllCourse = async (req, res, next) => {
+
   try {
     const courses = await COURSE.find().select("-lectures");
 
@@ -18,7 +23,8 @@ const getAllCourse = async (req, res, next) => {
     return next(new AppError(e.message, 400));
   }
 };
-
+//////////////////////
+/////////////////////
 const getLectureByCourseId = async (req, res, next) => {
   const courseId = req.params;
 
@@ -35,6 +41,8 @@ const getLectureByCourseId = async (req, res, next) => {
   });
 };
 
+/////////////////////
+/////////////////////
 const createCourse = async (req, res, next) => {
   const { title, description, category, createdBy, lectures, thumbnail } =
     req.body;
@@ -48,9 +56,24 @@ const createCourse = async (req, res, next) => {
       description,
       category,
       createdBy,
-      lectures,
-      thumbnail,
+      thumbnail :{
+         public_id: "default",
+        secure_url: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      }
     });
+
+    if(req.file){
+      const result = await cloudinary.v2.uploader.upload(req.file.path , {
+        folder : "neoLearn",
+      });
+      if(result){
+        course.thumbnail.public_id = result.public_id;
+        course.thumbnail.secure_url = result.secure_url;
+      }
+      await course.save();
+      await fs.promises.unlink(`uploads/${req.file.filename}`);
+    }
+    await course.save();
     return res.status(201).json({
       success: true,
       message: "Course Created Successfully",
