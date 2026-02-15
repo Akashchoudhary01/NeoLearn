@@ -84,6 +84,24 @@ const createCourse = async (req, res, next) => {
   }
 };
 
+
+//////////////////////
+//////////////////////
+const AddLectureToCourseById = async(req , res , next)=>{
+  const {title , description , video} = req.body;
+  const {id} = req.params;
+  if(!title || !description ||video){
+    return next (new AppError('Every Field is mendatory !' , 400));
+  }
+
+  const course = await COURSE.findById(id);
+
+  if(!course){
+    return next(new AppError("Course Not found !" , 404))
+  }
+
+
+}
 //////////////////////
 //////////////////////
 const deleteCourse = async (req, res, next) => {
@@ -91,6 +109,8 @@ const deleteCourse = async (req, res, next) => {
 
   try {
     const course = await COURSE.findByIdAndDelete(courseId);
+
+  
 
     res.status(204).json({
       success: true,
@@ -169,4 +189,5 @@ export {
   createCourse,
   deleteCourse,
   updateCourse,
+  AddLectureToCourseById,
 };
