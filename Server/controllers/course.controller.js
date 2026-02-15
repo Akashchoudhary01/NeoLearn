@@ -132,6 +132,38 @@ const AddLectureToCourseById = async (req, res, next) => {
     course,
   });
 };
+
+/////////////////////
+/////////////////////
+const deleteLectureById = async (req, res, next) => {
+  try {
+    const { courseId, lectureId } = req.params;
+
+    const course = await COURSE.findByIdAndUpdate(
+      courseId,
+      {
+        $pull: {
+          lectures: { _id: lectureId },
+        },
+      },
+      { new: true }
+    );
+
+    if (!course) {
+      return next(new AppError("Course not found", 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Lecture deleted successfully",
+      course,
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
 //////////////////////
 //////////////////////
 const deleteCourse = async (req, res, next) => {
@@ -216,4 +248,5 @@ export {
   deleteCourse,
   updateCourse,
   AddLectureToCourseById,
+  deleteLectureById,
 };
