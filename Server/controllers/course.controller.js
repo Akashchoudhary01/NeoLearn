@@ -55,6 +55,7 @@ const createCourse = async (req, res, next) => {
       description,
       category,
       createdBy,
+      lectures,
       thumbnail: {
         public_id: "default",
         secure_url: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
@@ -84,24 +85,53 @@ const createCourse = async (req, res, next) => {
   }
 };
 
-
 //////////////////////
 //////////////////////
-const AddLectureToCourseById = async(req , res , next)=>{
-  const {title , description , video} = req.body;
-  const {id} = req.params;
-  if(!title || !description ||video){
-    return next (new AppError('Every Field is mendatory !' , 400));
+const AddLectureToCourseById = async (req, res, next) => {
+  const { title, description } = req.body;
+  const { id } = req.params;
+  if (!title || !description) {
+    return next(new AppError("Every Field is mendatory !", 400));
   }
 
   const course = await COURSE.findById(id);
 
-  if(!course){
-    return next(new AppError("Course Not found !" , 404))
+  if (!course) {
+    return next(new AppError("Course Not found !", 404));
+  }
+  const lectureData = {
+    title,
+    description,
+    video: {},
+  };
+
+  if (req.file) {
+    const result = await cloudinary.v2.uploader.upload(req.file.path, {
+      folder: "neoLearn",
+    });
+    if (!result) {
+      return next(new AppError("Something Went Wrong", 400));
+    }
+
+    lectureData.video = {
+      secure_url: result.secure_url,
+      public_id: result.public_id,
+    };
+    await course.save();
+    await fs.promises.unlink(`uploads/${req.file.filename}`);
   }
 
+  course.lectures.push(lectureData);
 
-}
+  course.noOfLecture = course.lectures.length;
+  await course.save();
+  // Send response ✅
+  res.status(200).json({
+    success: true,
+    message: "Lecture added successfully",
+    course,
+  });
+};
 //////////////////////
 //////////////////////
 const deleteCourse = async (req, res, next) => {
@@ -109,8 +139,6 @@ const deleteCourse = async (req, res, next) => {
 
   try {
     const course = await COURSE.findByIdAndDelete(courseId);
-
-  
 
     res.status(204).json({
       success: true,
@@ -150,27 +178,25 @@ const updateCourse = async (req, res, next) => {
         await cloudinary.v2.uploader.destroy(course.thumbnail.public_id);
       }
 
-        //uploading the new Thumbnail
+      //uploading the new Thumbnail
 
-        try {
-          const result = await cloudinary.v2.uploader.upload(req.file.path, {
-            folder: "neoLearn",
-            crop: "fill",
-          });
+      try {
+        const result = await cloudinary.v2.uploader.upload(req.file.path, {
+          folder: "neoLearn",
+          crop: "fill",
+        });
 
-          if (result) {
-            course.thumbnail.secure_url = result.secure_url;
-            course.thumbnail.public_id = result.public_id;
-          }
-
-          await course.save();
-
-          await fs.promises.unlink(`uploads/${req.file.filename}`);
-          
-        } catch (e) {
-          return next(new AppError("Unable to update Thumbnail", 400));
+        if (result) {
+          course.thumbnail.secure_url = result.secure_url;
+          course.thumbnail.public_id = result.public_id;
         }
-      
+
+        await course.save();
+
+        await fs.promises.unlink(`uploads/${req.file.filename}`);
+      } catch (e) {
+        return next(new AppError("Unable to update Thumbnail", 400));
+      }
     }
 
     await course.save();
