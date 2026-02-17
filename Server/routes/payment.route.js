@@ -5,18 +5,22 @@ import {
   cancelSubscription,
   getRazorpayKey,
   verifySubscription,
-} from "../controllers/router.controller.js";
+} from "../controllers/payment.controller.js";
+import { authorizedRoles, isLoggedIn } from "../middleware/auth.middleware.js";
 
 const router = Router;
 
-router.route("/razorpay-key").get(getRazorpayKey);
+router
+  .route("/razorpay-key")
 
-router.route("/subscribe").post(buySubscription);
+  .get(isLoggedIn, getRazorpayKey);
 
-router.route("/verify").post(verifySubscription);
+router.route("/subscribe").post(isLoggedIn, buySubscription);
 
-router.route("/unSubscribe").post(cancelSubscription);
+router.route("/verify").post(isLoggedIn, verifySubscription);
 
-router.route("/").get(allPayments);
+router.route("/unSubscribe").post(isLoggedIn, cancelSubscription);
+
+router.route("/").get(isLoggedIn, authorizedRoles("ADMIN"), allPayments);
 
 export default router;
