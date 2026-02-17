@@ -8,19 +8,16 @@ import {
 } from "../controllers/payment.controller.js";
 import { authorizedRoles, isLoggedIn } from "../middleware/auth.middleware.js";
 
-const router = Router;
+const router = Router();
 
-router
-  .route("/razorpay-key")
+router.get("/razorpay-key" , isLoggedIn, getRazorpayKey);
 
-  .get(isLoggedIn, getRazorpayKey);
+router.post("/subscribe" , isLoggedIn, buySubscription);
 
-router.route("/subscribe").post(isLoggedIn, buySubscription);
+router.post("/verify" , isLoggedIn, verifySubscription);
 
-router.route("/verify").post(isLoggedIn, verifySubscription);
+router.post( "/unSubscribe" , isLoggedIn, cancelSubscription);
 
-router.route("/unSubscribe").post(isLoggedIn, cancelSubscription);
-
-router.route("/").get(isLoggedIn, authorizedRoles("ADMIN"), allPayments);
+router.get( "/" , isLoggedIn, authorizedRoles("ADMIN"), allPayments);
 
 export default router;
