@@ -8,14 +8,18 @@ import {
   AddLectureToCourseById,
   deleteLectureById,
 } from "../controllers/course.controller.js";
-import { isLoggedIn, authorizedRoles } from "../middleware/auth.middleware.js";
+import {
+  isLoggedIn,
+  authorizedRoles,
+  authorizedSubscriber,
+} from "../middleware/auth.middleware.js";
 import uploads from "../middleware/multer.middleware.js";
 
 const router = Router();
 
 router.get("/", getAllCourse);
 
-router.get("/:id", isLoggedIn, getLectureByCourseId);
+router.get("/:id", isLoggedIn, authorizedSubscriber, getLectureByCourseId);
 
 router.post(
   "/",
@@ -24,7 +28,6 @@ router.post(
   authorizedRoles("ADMIN"),
   createCourse,
 );
-
 
 router.post(
   "/:id",
@@ -38,7 +41,7 @@ router.delete(
   "/:courseId/lecture/:lectureId",
   isLoggedIn,
   authorizedRoles("ADMIN"),
-  deleteLectureById
+  deleteLectureById,
 );
 
 router.delete("/:id", isLoggedIn, authorizedRoles("ADMIN"), deleteCourse);
