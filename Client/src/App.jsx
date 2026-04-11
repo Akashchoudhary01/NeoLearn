@@ -1,11 +1,12 @@
 import React from 'react'
+import { Router } from 'react-router-dom'
 
 function App() {
   return (
-    <div className='h-screen w-full bg-green-400'>
-      hello testing
+    <Router>
       
-    </div>
+    </Router>
+  
   )
 }
 
