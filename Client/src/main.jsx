@@ -13,6 +13,6 @@ createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <App />
     <Toaster/>
-  </BrowserRouter>,
+  </BrowserRouter>
   </Provider>
 );
