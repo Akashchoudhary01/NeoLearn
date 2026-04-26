@@ -264,6 +264,7 @@ const userID = req.user.id;
 
 const updateProfile = async (req, res, next) => {
   const { fullName } = req.body;
+  const {role} = req.body;
   const userId = req.user.id;
 
   const user = await USER.findById(userId);
@@ -275,6 +276,9 @@ const updateProfile = async (req, res, next) => {
   // Update name
   if (fullName) {
     user.fullName = fullName;
+  }
+  if(role){
+    user.role = role;
   }
 
   // If new image uploaded
