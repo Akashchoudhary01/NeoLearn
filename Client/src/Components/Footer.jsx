@@ -10,7 +10,7 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <div className="text-white px-10 pt-6 bg-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div className="text-white px-10 pt-6 bg-gray-800 flex flex-col sm:flex-row justify-between items-center z-50 gap-4">
       
       {/* Left Side */}
       <section className="flex justify-center items-center">

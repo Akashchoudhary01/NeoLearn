@@ -1,6 +1,6 @@
 import React from "react";
 import { FiMenu } from "react-icons/fi";
-import { AiFillClockCircle } from "react-icons/ai";
+import {  AiFillCloseCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Footer from "../Components/Footer";
 
@@ -8,7 +8,7 @@ const HomeLayout = ({children}) => {
   // FunctionChange Width
   function changeWidth() {
     const drawerside = document.getElementsByClassName("drawer-side");
-    drawerside[0].style.width = 0;
+    drawerside[0].style.width = 'auto';
   }
 
   // functionHide Drawer
@@ -20,16 +20,16 @@ const HomeLayout = ({children}) => {
   }
 
   return (
-    <div className="min-h-[90vh]">
-      <div className="drawer absolute right-0 z-50 w-full">
+    <div className="min-h-[90vh] mt-2">
+      <div className="drawer absolute  w-full">
         <input id="my-drawer-1" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           {/* Page content here */}
           <label htmlFor="my-drawer-1" className="btn drawer-button">
             <FiMenu
               size={"32px"}
-              onChange={changeWidth}
-              className="font-bold text-white m-4"
+              onClick={changeWidth}
+              className="font-bold text-white mx-4 bg-transparent"
             />
           </label>
         </div>
@@ -39,11 +39,11 @@ const HomeLayout = ({children}) => {
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
-          <ul className="menu bg-base-200 min-h-full sm:w-80 w-48 relative text-base-content p-4">
+          <ul className="menu bg-base-200 min-h-full sm:w-80 w-48 relative text-base-content ">
             {/* Sidebar content here */}
             <li className="w-fit absolute right-2 z-50">
-              <button>
-                <AiFillClockCircle size={"24px"} onClick={hideDrawer} />
+              <button className="bg-transparent">
+                <AiFillCloseCircle size={"24px"} onClick={hideDrawer} />
               </button>
             </li>
             <li>
