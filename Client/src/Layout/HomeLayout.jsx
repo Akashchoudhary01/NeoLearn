@@ -27,6 +27,16 @@ const HomeLayout = ({ children }) => {
     changeWidth();
   }
 
+  //HandleLogout
+  function handleLogout(e){
+     e.preveneDefault();
+    //  const res = await dispatch(logout());
+    // if(res?.payload?.success)
+      nevigate("/");
+  }
+
+  
+
   return (
     <div className="min-h-[90vh] mt-2">
       <div className="drawer absolute  w-full">
@@ -72,17 +82,33 @@ const HomeLayout = ({ children }) => {
             <li>
               <Link to="/about">About us</Link>
             </li>
+            <div className="w-[90%] absolute bottom-4">
+
+            {/* buttons displayed when user is not loggedin */}
             {!isLoggedIn &&(
-              <div className="w-full flex justify-between item-center">
-                <button className="btn-primary px-3 py-1.5 rounded-md font-semibold">
+              <div className="w-full flex justify-evenly mt-3 item-center">
+                <button className="btn-primary bg-green-400 px-7 py-1.5 rounded-md font-semibold">
                   <Link>Login</Link>
                 </button>
-                <button className="btn-secondary px-3 py-1.5 rounded-md font-semibold">
+                <button className="btn-secondary bg-indigo-500 px-7 py-1.5 rounded-md font-semibold">
                   <Link>SignUp</Link>
                 </button>
 
               </div>
             )}
+            {/* buttons displayed when user is  loggedin */}
+            {isLoggedIn &&(
+              <div className="w-full flex justify-evenly mt-3 item-center">
+                <button className="btn-primary bg-cyan-600 px-7 py-1.5 rounded-md font-semibold">
+                  <Link>Profile</Link>
+                </button>
+                <button onClick={handleLogout} className="btn-secondary bg-indigo-500 px-7 py-1.5 rounded-md font-semibold">
+                  <Link>Logout</Link>
+                </button>
+
+              </div>
+            )}
+            </div>
           </ul>
         </div>
       </div>
