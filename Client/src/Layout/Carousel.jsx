@@ -1,0 +1,47 @@
+function Carousel({ image, title, description, slideNumber, totalSlide }) {
+  return (
+    <div
+      id={`slide${slideNumber}`}  
+      className="carousel-item relative w-full flex justify-center"
+    >
+      <div className="flex flex-col items-center text-center max-w-xl">
+        
+        <img
+          src={image}
+          className="w-52 h-52 object-cover rounded-full border-4 border-gray-300 shadow-lg"
+          alt={title}
+        />
+
+        <p className="mt-6 text-gray-300 text-lg">
+          {description}
+        </p>
+
+        <h2 className="mt-4 text-2xl font-semibold">
+          {title}
+        </h2>
+      </div>
+
+      {/* Navigation */}
+      <div className="absolute inset-y-1/2 left-0 right-0 flex justify-between px-4">
+        
+        <a
+          href={`#slide${slideNumber === 1 ? totalSlide : slideNumber - 1}`} 
+          className="btn btn-circle"
+        >
+          ❮
+        </a>
+
+        <a
+          href={`#slide${(slideNumber) % totalSlide  + 1}`} 
+          className="btn btn-circle"
+        >
+          ❯
+        </a>
+
+      </div>
+    </div>
+  );
+  
+}
+
+export default Carousel
