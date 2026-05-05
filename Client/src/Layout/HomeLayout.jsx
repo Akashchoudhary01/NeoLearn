@@ -91,7 +91,7 @@ const HomeLayout = ({ children }) => {
                   <Link>Login</Link>
                 </button>
                 <button className="btn-secondary bg-indigo-500 px-7 py-1.5 rounded-md font-semibold">
-                  <Link>SignUp</Link>
+                  <Link to={'/signup'}>SignUp</Link>
                 </button>
 
               </div>
