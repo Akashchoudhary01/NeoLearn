@@ -11,7 +11,9 @@ const Signup = () => {
   const dispatch = useDispatch();
 
   const [previewImage, setPreviewImage] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // for user input 
   const [signupData, setSignupData] = useState({
     fullName: "",
     avatar: "",
@@ -30,6 +32,8 @@ const Signup = () => {
 
   // image upload
   function getImage(e) {
+    e.preventDefault();
+
     const uploadedImage = e.target.files[0];
 
     if (uploadedImage) {
@@ -40,11 +44,21 @@ const Signup = () => {
 
       const fileReader = new FileReader();
       fileReader.readAsDataURL(uploadedImage);
-
-      fileReader.onload = () => {
-        setPreviewImage(fileReader.result);
-      };
+      fileReader.addEventListener("load", function () {
+        setPreviewImage(this.result);
+      });
     }
+  }
+
+  // reset form
+  function resetForm() {
+    setSignupData({
+      fullName: "",
+      avatar: "",
+      email: "",
+      password: "",
+    });
+    setPreviewImage("");
   }
 
   // submit
@@ -53,8 +67,9 @@ const Signup = () => {
 
     const { fullName, email, password, avatar } = signupData;
 
+    // Validation checks
     if (!fullName || !email || !password || !avatar) {
-      toast.error("Please fill all details");
+      toast.error("Please fill all fields");
       return;
     }
 
@@ -68,12 +83,14 @@ const Signup = () => {
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
       )
     ) {
-      toast.error("Password must be strong");
+      toast.error(
+        "Minimum password length should be 8 with Uppercase, Lowercase, Number and Symbol"
+      );
       return;
     }
 
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      toast.error("Invalid email");
+      toast.error("Invalid email Id");
       return;
     }
 
@@ -83,29 +100,28 @@ const Signup = () => {
     formData.append("email", email);
     formData.append("password", password);
 
-    const toastId = toast.loading("Creating your account...");
+    setLoading(true);
 
-    const response = await dispatch(createAccount(formData));
-    console.log("API RESPONSE:", response);
+    try {
+      const response = await dispatch(createAccount(formData));
+      console.log("API RESPONSE:", response);
 
-    toast.dismiss(toastId);
-
-    if (response.meta.requestStatus === "fulfilled") {
-      toast.success(response.payload?.message || "Account created");
-      navigate("/"); // ✅ redirect works now
-    } else {
-      toast.error(response.payload?.message || "Failed to create");
+      // ✅ Fixed: Check for 'success' not 'succcess'
+      if (response.payload && response.payload.success) {
+        resetForm();
+        // Navigate after a short delay to show success message
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        toast.error(response.payload?.message || "Failed to create account");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      toast.error("An error occurred during signup");
+    } finally {
+      setLoading(false);
     }
-
-    // reset form
-    setSignupData({
-      fullName: "",
-      avatar: "",
-      email: "",
-      password: "",
-    });
-
-    setPreviewImage("");
   }
 
   return (
@@ -117,7 +133,7 @@ const Signup = () => {
             Create Account
           </h1>
 
-          <form onSubmit={createNewAccount} autoComplete="off" className="space-y-4">
+          <form onSubmit={createNewAccount} noValidate autoComplete="off" className="space-y-4">
 
             {/* Image */}
             <label htmlFor="image-upload" className="cursor-pointer flex justify-center">
@@ -148,6 +164,7 @@ const Signup = () => {
               onChange={handleUserInput}
               placeholder="Enter your name"
               className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:border-blue-500"
+              disabled={loading}
             />
 
             {/* Email */}
@@ -158,6 +175,7 @@ const Signup = () => {
               onChange={handleUserInput}
               placeholder="Enter your email"
               className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:border-blue-500"
+              disabled={loading}
             />
 
             {/* Password */}
@@ -168,18 +186,24 @@ const Signup = () => {
               onChange={handleUserInput}
               placeholder="Enter password"
               className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:border-blue-500"
+              disabled={loading}
             />
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-md font-semibold"
+              disabled={loading}
+              className={`w-full py-2 rounded-md font-semibold transition ${
+                loading
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              Register
+              {loading ? "Creating Account..." : "Register"}
             </button>
 
             <p className="text-end text-sm">
               Already a user?{" "}
-              <Link to="/login" className="text-blue-400">
+              <Link to="/login" className="text-blue-400 hover:underline">
                 Login
               </Link>
             </p>
