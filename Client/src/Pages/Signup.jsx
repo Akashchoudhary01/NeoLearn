@@ -1,117 +1,129 @@
-import React, { useReducer, useState } from "react";
+import React, { useState } from "react";
 import HomeLayout from "../Layout/HomeLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { BsPersonCircle } from "react-icons/bs";
-import {toast} from 'react-hot-toast'
+import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { createAccount } from "../Redux/Slices/AuthSlice";
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const Navigate = useNavigate();
-    const Dispatch = useDispatch();
   const [previewImage, setPreviewImage] = useState("");
 
-  const [signupData , setSignupData] = useState({
-    fullName : "",
+  const [signupData, setSignupData] = useState({
+    fullName: "",
     avatar: "",
     email: "",
     password: "",
-  })
+  });
 
-  function handleUserInput(e){
-    const [name , value] = e.target;
+  // handle input
+  function handleUserInput(e) {
+    const { name, value } = e.target;
     setSignupData({
-        ...signupData,
-        [name] : value
-    })
+      ...signupData,
+      [name]: value,
+    });
   }
 
-  function createNewAccount(e){
-    e.preventDefault();
-    if(!avatar || !fullName || !email || !password){
-        toast.error("Please fill All The Details");
-        return;
-    }
-    //checking for name length
-    if(signupData.fullName.length > 5){
-        toast.error("Name Should Be At Least 5 Character")
-    }
-    if(!signupData.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/)){
-        toast.error(" Password Should At least 8 characters , 1 uppercase letter , 1 lowercase letter , 1 number (0-9) , 1 special character")
-        return ;
-    }
-    if(!signupData.email.match (/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){
-        toast.error("Invalid Email ")
-        return
-    }
-    if(!signupData.avatar){
-        toast.error("Please Set A Profile Picture")
-    }
-}
-//   // ✅ handle image preview
-//   const handleImageUpload = (e) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       setPreviewImage(URL.createObjectURL(file));
-//     }
-//   };
+  // image upload
+  function getImage(e) {
+    const uploadedImage = e.target.files[0];
 
-  function getImage(e){
-    e.preventDefault();
-    const uploadeImage = e.target.files[0];
+    if (uploadedImage) {
+      setSignupData({
+        ...signupData,
+        avatar: uploadedImage,
+      });
 
-    if(uploadeImage){
-        setSignupData({
-            ...signupData,
-            avatar: uploadeImage
-        })
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(uploadeImage);
-        fileReader.addEventListener("load" , function(){
-            setPreviewImage(this.result)
-        })
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(uploadedImage);
+
+      fileReader.onload = () => {
+        setPreviewImage(fileReader.result);
+      };
+    }
+  }
+
+  // submit
+  async function createNewAccount(e) {
+    e.preventDefault();
+
+    const { fullName, email, password, avatar } = signupData;
+
+    if (!fullName || !email || !password || !avatar) {
+      toast.error("Please fill all details");
+      return;
+    }
+
+    if (fullName.length < 5) {
+      toast.error("Name should be at least 5 characters");
+      return;
+    }
+
+    if (
+      !password.match(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
+      )
+    ) {
+      toast.error("Password must be strong");
+      return;
+    }
+
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      toast.error("Invalid email");
+      return;
     }
 
     const formData = new FormData();
-    formData.append("fullName" , signupData.fullName);
-    formData.append("avatar" , signupData.avatar);
-    formData.append("email" , signupData.email);
-    formData.append("password" , signupData.password);
+    formData.append("fullName", fullName);
+    formData.append("avatar", avatar);
+    formData.append("email", email);
+    formData.append("password", password);
 
+    const toastId = toast.loading("Creating your account...");
 
-    //dispatch create Account Actions
-    const response = await Dispatch(createAccount(formData));
-    Navigate("/");
+    const response = await dispatch(createAccount(formData));
+    console.log("API RESPONSE:", response);
+
+    toast.dismiss(toastId);
+
+    if (response.meta.requestStatus === "fulfilled") {
+      toast.success(response.payload?.message || "Account created");
+      navigate("/"); // ✅ redirect works now
+    } else {
+      toast.error(response.payload?.message || "Failed to create");
+    }
+
+    // reset form
     setSignupData({
-        fullName : "",
-    avatar: "",
-    email: "",
-    password: "",
-    })
+      fullName: "",
+      avatar: "",
+      email: "",
+      password: "",
+    });
 
-    setPreviewImage= "";
+    setPreviewImage("");
   }
-
 
   return (
     <HomeLayout>
       <div className="min-h-screen flex justify-center items-center px-4">
-        
-        <div className="w-full max-w-md bg-gray-900 text-white p-6 rounded-xl shadow-[0_0_25px_black]">
+        <div className="w-full max-w-md bg-gray-900 text-white p-6 rounded-xl shadow-[0_0_25px_rgba(59,130,246,0.4)]">
           
           <h1 className="text-2xl font-bold text-center mb-4">
             Create Account
           </h1>
 
-          <form className=" "  onSubmit={createNewAccount} >
+          <form onSubmit={createNewAccount} autoComplete="off" className="space-y-4">
 
-            {/* Image Upload */}
+            {/* Image */}
             <label htmlFor="image-upload" className="cursor-pointer flex justify-center">
               {previewImage ? (
                 <img
                   src={previewImage}
-                 
                   className="w-24 h-24 rounded-full object-cover border-2 border-gray-400"
                   alt="preview"
                 />
@@ -122,51 +134,55 @@ const Signup = () => {
 
             <input
               type="file"
-               onChange={getImage}
               accept="image/*"
               id="image-upload"
               hidden
+              onChange={getImage}
             />
 
-            {/* Username */}
-            <div>
-              <label className="text-sm text-gray-300">Username</label>
-              <input
-                type="text"
-                value={signupData.fullName}
-                className="w-full mt-1 px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:outline-none focus:border-blue-500"
-              />
-            </div>
+            {/* Name */}
+            <input
+              type="text"
+              name="fullName"
+              value={signupData.fullName}
+              onChange={handleUserInput}
+              placeholder="Enter your name"
+              className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:border-blue-500"
+            />
 
             {/* Email */}
-            <div>
-              <label className="text-sm text-gray-300">Email</label>
-              <input
-                type="email"
-                   value={signupData.email}
-                className="w-full mt-1 px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:outline-none focus:border-blue-500"
-              />
-            </div>
+            <input
+              type="email"
+              name="email"
+              value={signupData.email}
+              onChange={handleUserInput}
+              placeholder="Enter your email"
+              className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:border-blue-500"
+            />
 
             {/* Password */}
-            <div>
-              <label className="text-sm text-gray-300">Password</label>
-              <input
-                type="password"
-                   value={signupData.password}
-                className="w-full mt-1 px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:outline-none focus:border-blue-500"
-              />
-            </div>
+            <input
+              type="password"
+              name="password"
+              value={signupData.password}
+              onChange={handleUserInput}
+              placeholder="Enter password"
+              className="w-full px-3 py-2 rounded-md bg-transparent border border-gray-600 focus:border-blue-500"
+            />
 
-            {/* Button */}
             <button
               type="submit"
-              className="w-full mt-3 bg-blue-600 hover:bg-blue-700 transition-all py-2 rounded-md font-semibold"
+              className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-md font-semibold"
             >
               Register
             </button>
 
-            <p className="text-end p-2">Already a user <Link to={'/login'} className="text-blue-400" >Login</Link> </p>
+            <p className="text-end text-sm">
+              Already a user?{" "}
+              <Link to="/login" className="text-blue-400">
+                Login
+              </Link>
+            </p>
 
           </form>
         </div>
