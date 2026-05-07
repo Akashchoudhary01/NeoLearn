@@ -17,6 +17,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     // Handle createAccount async thunk
     builder
+    //for registration
       .addCase(createAccount.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -25,7 +26,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.isLoggedIn = true;
         state.data = action.payload.user || action.payload.data;
-        state.role = action.payload.role || "user";
+        state.role = action.payload.role || "USER";
         // Store in localStorage if needed
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("role", state.role);
@@ -36,8 +37,33 @@ const authSlice = createSlice({
         state.error = action.error.message;
         state.isLoggedIn = false;
       });
-  },
-});
+
+      //for Login
+      builder
+      .addCase(LoginAc.pending , (state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(LoginAc.fulfilled , (state , action )=>{
+        state.loading = false;
+        state.isLoggedIn = true;
+        state.data = action.payload.user || action.payload.data;
+        state.role = action.payload.role || "USER"
+
+          // Store in localStorage if needed
+        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("role", state.role);
+        localStorage.setItem("data", JSON.stringify(state.data));
+
+      })
+        .addCase(LoginAc.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+        state.isLoggedIn = false;
+      });
+
+    },
+    });
 
 // ✅ Async Thunk
 export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
@@ -47,6 +73,17 @@ export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
     return res.data;
   } catch (error) {
     toast.error(error?.response?.data?.message || "Failed to create account");
+    throw error;
+  }
+});
+// ✅ Async Thunk
+export const LoginAc = createAsyncThunk("/auth/login", async (data) => {
+  try {
+    const res =  await AxiosInstance.post("user/login", data);
+    toast.success(res?.data?.message || "User LoggedIn  successfully");
+    return res.data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Failed to Loggenin ");
     throw error;
   }
 });

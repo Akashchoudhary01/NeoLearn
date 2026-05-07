@@ -202,7 +202,7 @@ const Signup = () => {
             </button>
 
             <p className="text-end text-sm">
-              Already a user?{" "}
+              Already Have a account ? {" "}
               <Link to="/login" className="text-blue-400 hover:underline">
                 Login
               </Link>

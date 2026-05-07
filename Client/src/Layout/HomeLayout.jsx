@@ -88,7 +88,7 @@ const HomeLayout = ({ children }) => {
             {!isLoggedIn &&(
               <div className="w-full flex justify-evenly mt-3 item-center">
                 <button className="btn-primary bg-green-400 px-7 py-1.5 rounded-md font-semibold">
-                  <Link>Login</Link>
+                  <Link to={"/login"}>Login</Link>
                 </button>
                 <button className="btn-secondary bg-indigo-500 px-7 py-1.5 rounded-md font-semibold">
                   <Link to={'/signup'}>SignUp</Link>
