@@ -5,7 +5,9 @@ import AxiosInstance from "../../Helpers/AxiosInstance";
 const InitialState = {
   isLoggedIn: localStorage.getItem("isLoggedIn") === "true" || false,
   role: localStorage.getItem("role") || "",
-  data: localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : {},
+  data: localStorage.getItem("data")
+    ? JSON.parse(localStorage.getItem("data"))
+    : {},
   loading: false,
   error: null,
 };
@@ -17,7 +19,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     // Handle createAccount async thunk
     builder
-    //for registration
+      //for registration
       .addCase(createAccount.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -25,7 +27,7 @@ const authSlice = createSlice({
       .addCase(createAccount.fulfilled, (state, action) => {
         state.loading = false;
         state.isLoggedIn = true;
-        const userData  = action.payload.user || action.payload.data;
+        const userData = action.payload.user || action.payload.data;
         state.data = userData;
         state.role = userData?.role || "USER";
         // Store in localStorage if needed
@@ -39,31 +41,29 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
       });
 
-      //for Login
-      builder
-      .addCase(LoginAc.pending , (state)=>{
+    //for Login
+    builder
+      .addCase(LoginAc.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(LoginAc.fulfilled , (state , action )=>{
+      .addCase(LoginAc.fulfilled, (state, action) => {
         state.loading = false;
         state.isLoggedIn = "true";
         const userData = action.payload.user || action.payload.data;
-        state.data = userData
-        state.role = userData?.role || "USER"
+        state.data = userData;
+        state.role = userData?.role || "USER";
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", state.role);
         localStorage.setItem("data", JSON.stringify(state.data));
-
       })
-        .addCase(LoginAc.rejected, (state, action) => {
+      .addCase(LoginAc.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
         state.isLoggedIn = false;
       });
 
-      // For Logout
-      
+
     // ========== LOGOUT ==========
     builder
       .addCase(Logout.pending, (state) => {
@@ -71,7 +71,6 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(Logout.fulfilled, (state) => {
-        // ✅ FIXED: Complete rewrite - logout should clear state, not set it
         state.loading = false;
         state.isLoggedIn = false;
         state.role = "";
@@ -82,7 +81,6 @@ const authSlice = createSlice({
         localStorage.removeItem("data");
       })
       .addCase(Logout.rejected, (state, action) => {
-        // ✅ FIXED: On logout error, should clear state anyway
         state.loading = false;
         state.error = action.error.message;
         state.isLoggedIn = false;
@@ -92,9 +90,8 @@ const authSlice = createSlice({
         localStorage.removeItem("role");
         localStorage.removeItem("data");
       });
-      
-    },
-    });
+  },
+});
 
 // ✅ Async Thunk of regestrartion
 export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
@@ -110,7 +107,7 @@ export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
 // ✅ Async Thunk for login
 export const LoginAc = createAsyncThunk("/auth/login", async (data) => {
   try {
-    const res =  await AxiosInstance.post("user/login", data);
+    const res = await AxiosInstance.post("user/login", data);
     toast.success(res?.data?.message || "User LoggedIn  successfully");
     return res.data;
   } catch (error) {
@@ -119,17 +116,16 @@ export const LoginAc = createAsyncThunk("/auth/login", async (data) => {
   }
 });
 // Async Thunk for logout
-export const Logout = createAsyncThunk("/auth/logout" , async ()=>{
-  try{
+export const Logout = createAsyncThunk("/auth/logout", async () => {
+  try {
     const res = await AxiosInstance.get("user/logout");
     toast.success(res?.data?.message || "User Logout successfully");
     return res.data;
-  }catch(error){
+  } catch (error) {
     toast.error(error?.response?.data?.message || "Failed to Logout ");
     throw error;
-    
   }
-})
+});
 
 export const {} = authSlice.actions;
 
