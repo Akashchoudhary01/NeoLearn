@@ -4,15 +4,18 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../Components/Footer";
 import { useDispatch, useSelector } from "react-redux";
+import { Logout } from "../Redux/Slices/AuthSlice";
 
-const HomeLayout = ({ children }) => {
+const  HomeLayout = ({ children }) => {
   const dispatch = useDispatch();
-  const nevigate = useNavigate();
+  const navigate = useNavigate();
 
   //For Checking if the user is LoggedIn
   const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
   const role = useSelector((state) => state?.auth?.role);
 
+    console.log("isLoggedIn:", isLoggedIn,  isLoggedIn); // ✅ Debug log
+  console.log("role:", role); // ✅ Debug log
   // FunctionChange Width
   function changeWidth() {
     const drawerside = document.getElementsByClassName("drawer-side");
@@ -28,12 +31,12 @@ const HomeLayout = ({ children }) => {
   }
 
   //HandleLogout
-  function handleLogout(e){
-     e.preveneDefault();
-    //  const res = await dispatch(logout());
-    // if(res?.payload?.success)
-      nevigate("/");
-  }
+ const handleLogout = async (e) => {
+  e.preventDefault();
+  await dispatch(Logout());
+  hideDrawer();
+  navigate("/");
+};
 
   
 
@@ -103,7 +106,7 @@ const HomeLayout = ({ children }) => {
                   <Link>Profile</Link>
                 </button>
                 <button onClick={handleLogout} className="btn-secondary bg-indigo-500 px-7 py-1.5 rounded-md font-semibold">
-                  <Link>Logout</Link>
+                  <Link >Logout</Link>
                 </button>
 
               </div>

@@ -3,9 +3,9 @@ import { toast } from "react-hot-toast";
 import AxiosInstance from "../../Helpers/AxiosInstance";
 
 const InitialState = {
-  isLoggedIn: localStorage.getItem("isLoggedIn") || false,
+  isLoggedIn: localStorage.getItem("isLoggedIn") === "true" || false,
   role: localStorage.getItem("role") || "",
-data: localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : {},
+  data: localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : {},
   loading: false,
   error: null,
 };
@@ -29,7 +29,7 @@ const authSlice = createSlice({
         state.data = userData;
         state.role = userData?.role || "USER";
         // Store in localStorage if needed
-        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", state.role);
         localStorage.setItem("data", JSON.stringify(state.data));
       })
@@ -47,13 +47,11 @@ const authSlice = createSlice({
       })
       .addCase(LoginAc.fulfilled , (state , action )=>{
         state.loading = false;
-        state.isLoggedIn = true;
+        state.isLoggedIn = "true";
         const userData = action.payload.user || action.payload.data;
         state.data = userData
         state.role = userData?.role || "USER"
-
-          // Store in localStorage if needed
-        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", state.role);
         localStorage.setItem("data", JSON.stringify(state.data));
 
@@ -64,10 +62,41 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
       });
 
+      // For Logout
+      
+    // ========== LOGOUT ==========
+    builder
+      .addCase(Logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(Logout.fulfilled, (state) => {
+        // ✅ FIXED: Complete rewrite - logout should clear state, not set it
+        state.loading = false;
+        state.isLoggedIn = false;
+        state.role = "";
+        state.data = {};
+        state.error = null;
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("role");
+        localStorage.removeItem("data");
+      })
+      .addCase(Logout.rejected, (state, action) => {
+        // ✅ FIXED: On logout error, should clear state anyway
+        state.loading = false;
+        state.error = action.error.message;
+        state.isLoggedIn = false;
+        state.role = "";
+        state.data = {};
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("role");
+        localStorage.removeItem("data");
+      });
+      
     },
     });
 
-// ✅ Async Thunk
+// ✅ Async Thunk of regestrartion
 export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
   try {
     const res = await AxiosInstance.post("user/register", data);
@@ -78,7 +107,7 @@ export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
     throw error;
   }
 });
-// ✅ Async Thunk
+// ✅ Async Thunk for login
 export const LoginAc = createAsyncThunk("/auth/login", async (data) => {
   try {
     const res =  await AxiosInstance.post("user/login", data);
@@ -89,6 +118,18 @@ export const LoginAc = createAsyncThunk("/auth/login", async (data) => {
     throw error;
   }
 });
+// Async Thunk for logout
+export const Logout = createAsyncThunk("/auth/logout" , async ()=>{
+  try{
+    const res = await AxiosInstance.get("user/logout");
+    toast.success(res?.data?.message || "User Logout successfully");
+    return res.data;
+  }catch(error){
+    toast.error(error?.response?.data?.message || "Failed to Logout ");
+    throw error;
+    
+  }
+})
 
 export const {} = authSlice.actions;
 
