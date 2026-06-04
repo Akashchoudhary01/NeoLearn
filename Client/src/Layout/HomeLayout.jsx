@@ -14,8 +14,8 @@ const  HomeLayout = ({ children }) => {
   const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
   const role = useSelector((state) => state?.auth?.role);
 
-    console.log("isLoggedIn:", isLoggedIn,  isLoggedIn); // ✅ Debug log
-  console.log("role:", role); // ✅ Debug log
+    // console.log("isLoggedIn:", isLoggedIn,  isLoggedIn); // ✅ Debug log
+  // console.log("role:", role); // ✅ Debug log
   // FunctionChange Width
   function changeWidth() {
     const drawerside = document.getElementsByClassName("drawer-side");
