@@ -25,7 +25,7 @@ const getAllCourse = async (req, res, next) => {
 //////////////////////
 /////////////////////
 const getLectureByCourseId = async (req, res, next) => {
-  const courseId = req.params;
+  const courseId = req.params.id;
 
   const course = await COURSE.findById(courseId);
 

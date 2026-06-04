@@ -226,7 +226,7 @@ const resetPassword = async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
-    message: "Your Message Changed SuccessFully !",
+    message: "Your Password Changed SuccessFully !",
   });
 };
 
