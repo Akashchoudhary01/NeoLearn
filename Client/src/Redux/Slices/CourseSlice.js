@@ -3,7 +3,8 @@ import AxiosInstance from "../../Helpers/AxiosInstance";
 import {toast} from "react-hot-toast";
 
 const initialState = {
-    courseData : []
+    courseData : [],
+    error : null
 }
 
 export const getAllCourse = createAsyncThunk("/course/get" , async()=>{
@@ -29,7 +30,15 @@ const CourseSlice = createSlice({
     reducers : {},
     extraReducers : (builder)=>{
         builder
-        .addCase()
+        .addCase(getAllCourse.fulfilled , (state , action)=>{
+            if(action.payload){
+                state.courseData  = [...action.payload]
+            }
+        })
+        .addCase(getAllCourse.rejected , (state , action )=>{
+            state.error = action?.payload?.error
+           
+        })
 
     }
 
