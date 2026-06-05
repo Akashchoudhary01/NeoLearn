@@ -5,7 +5,7 @@ import { BsPersonCircle } from "react-icons/bs";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { createAccount } from "../Redux/Slices/AuthSlice";
-import { isEmailValid, isPasswordValid } from "../Helpers/regexHelper";
+import { isEmailValid, isPasswordValid } from "../Helpers/regexHelper.js";
 
 const Signup = () => {
   const navigate = useNavigate();

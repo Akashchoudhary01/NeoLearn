@@ -1,33 +1,57 @@
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import HomeLayout from "../Layout/HomeLayout";
+import { isEmailValid } from "../Helpers/regexHelper";
+import AxiosInstance from "../Helpers/AxiosInstance";
 
 const ContactUs = () => {
+  const [userInput, setUserInput] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
 
-    const [userInput , setUserInput] = useState({
-        name : "",
-        email : "",
-        message : "",
-    })
+  function handleInputChange(e) {
+    const { name, value } = e.target;
+    console.log(name, value);
 
-    function handleInputChange(e){
-      const {name , value} = e.target;
-      console.log(name , value);
+    setUserInput({
+      ...userInput,
+      [name]: value,
+    });
+  }
 
-      setUserInput({
-        ...userInput,
-        [name] : value
-      })
-   }
-
-   async function handleformSubit(e){
+  async function handleformSubit(e) {
     e.preventDefault();
-    if(!userInput.email || !userInput.name || !userInput.message){
-        toast.error("Every Field in mandatory ! ")
-        return;
+    if (!userInput.email || !userInput.name || !userInput.message) {
+      toast.error("Every Field in mandatory ! ");
+      return;
     }
+    if (!isEmailValid(userInput.email)) {
+      toast.error("Invalid Email ! ");
+      return;
+    }
+    try {
+      const response = AxiosInstance.post("/contact-us", userInput);
+      toast.promise(response, {
+        loading: "Sending your message ...",
+        success: "Message Send Successfully..",
+        error: "Failed to submit the form ",
+      });
 
-   }
+      const contactResponse = await response;
+
+      if (contactResponse?.data?.success) {
+        setUserInput({
+          name: "",
+          email: "",
+          message: "",
+        });
+      }
+    } catch (error) {
+      toast.error("Operation Failed !");
+    }
+  }
 
   return (
     <HomeLayout>
@@ -38,22 +62,22 @@ const ContactUs = () => {
           </h1>
 
           <div className="mt-4  ">
-
-            <form action="" 
-            className="flex flex-col"
-            noValidate
-             onSubmit={handleformSubit}>
+            <form
+              action=""
+              className="flex flex-col"
+              noValidate
+              onSubmit={handleformSubit}
+            >
               <div className="mx-3 mb-4 flex flex-col ">
                 <label htmlFor="name">Name</label>
                 <input
                   type="text"
                   name="name"
-                  
                   value={userInput.name}
                   placeholder="Enter your name"
                   className="bg-gray-800  rounded-md px-3 mt-2 py-1 outline-none border-none"
                   onChange={handleInputChange}
-                  />
+                />
               </div>
               {/* Email */}
               <div className="mx-3 flex mb-4 flex-col ">
@@ -65,7 +89,7 @@ const ContactUs = () => {
                   value={userInput.email}
                   className="bg-gray-800 rounded-md px-3 mt-2 py-1 outline-none border-none"
                   onChange={handleInputChange}
-                  />
+                />
               </div>
               {/* Message */}
               <div className="mx-3 mb-4 flex flex-col ">
@@ -76,14 +100,12 @@ const ContactUs = () => {
                   value={userInput.message}
                   className="bg-gray-800 px-3 mt-2 py-1 outline-none resize-none h-40 rounded-md border-none"
                   onChange={handleInputChange}
-                  />
+                />
               </div>
 
-            
-                <button className="px-3 py-2 mx-3 my-2 text-xl rounded-md active:scale-95 bg-blue-500 outline-1 outline-black ">
-                  Submit
-                </button>
-            
+              <button className="px-3 py-2 mx-3 my-2 text-xl rounded-md active:scale-95 bg-blue-500 outline-1 outline-black ">
+                Submit
+              </button>
             </form>
           </div>
         </div>
