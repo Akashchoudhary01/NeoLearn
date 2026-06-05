@@ -3,6 +3,7 @@ import HomeLayout from '../../Layout/HomeLayout'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCourse } from '../../Redux/Slices/CourseSlice'
+import CourseCard from './CourseCard'
 
 
 const Course = () => {
@@ -26,7 +27,13 @@ const Course = () => {
 
             <h1 className='text-2xl'>Explore the course made by <span className='text-yellow-300'> Industry Expert</span></h1>
           </div>
-          <div className='mb-10 flex flex-wrap gap-14'></div>
+          <div className='mb-10 flex flex-wrap gap-14'>
+            {
+              courseData?.map((element)=>{
+                return <CourseCard key={element._id} data={element}/>
+              })
+            }
+          </div>
 
         </div>
     </HomeLayout>

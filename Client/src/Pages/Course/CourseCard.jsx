@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from "react-router-dom";
 
 
-const CourseComponent = ({data}) => {
+const CourseCard = ({data}) => {
     const navigate = useNavigate();
   return (
     <div
@@ -41,4 +41,5 @@ const CourseComponent = ({data}) => {
   )
 }
 
-export default CourseComponent
+export default CourseCard;
+ 
