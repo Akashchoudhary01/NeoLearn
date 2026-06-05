@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import HomeLayout from '../../Layout/HomeLayout'
-import toast from 'react-hot-toast'
+// import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllCourse } from '../../Redux/Slices/CourseSlice'
 import CourseCard from './CourseCard'

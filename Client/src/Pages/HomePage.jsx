@@ -21,7 +21,7 @@ const HomePage = () => {
           <Link to="/courses" >
           <button className="bg-yellow-300 text-xl rounded-md active:scale-95 px-5 py-3 text-black italic transition-all ease-in-out duration-300 hover:bg-yellow-400 hover:scale-95">Explore Courses</button>
           </Link>
-          <Link to="/" >
+          <Link to="/contact" >
           <button className="bg-indigo-500 text-xl rounded-md active:scale-95 px-6 py-3 text-black italic transition-all ease-in-out duration-300 hover:bg-indigo-400 hover:scale-95">Contact Us</button>
           </Link>
 
