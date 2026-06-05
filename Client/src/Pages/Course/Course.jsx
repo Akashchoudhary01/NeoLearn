@@ -22,12 +22,12 @@ const Course = () => {
   } , [dispatch])
   return (
     <HomeLayout>
-        <div className='h-screen pt-12 pl-20  flex flex-col gap-10  text-white'>
-          <div className='m-20'>
+        <div className='h-full pt-8 pl-20  flex flex-col gap-10  text-white'>
+          <div className='m-10'>
 
-            <h1 className='text-2xl'>Explore the course made by <span className='text-yellow-300'> Industry Expert</span></h1>
+            <h1 className='text-2xl mx-0'>Explore the course made by <span className='text-yellow-300'> Industry Expert</span></h1>
           </div>
-          <div className='mb-10 flex flex-wrap gap-14'>
+          <div className='mb-8 flex flex-wrap gap-14'>
             {
               courseData?.map((element)=>{
                 return <CourseCard key={element._id} data={element}/>

@@ -6,13 +6,13 @@ const CourseCard = ({data}) => {
     const navigate = useNavigate();
   return (
     <div
-    onClick={()=> navigate('/course/description')}
+    onClick={()=> navigate('/course/description' ,{ state:{data}})}
     
-    className='text-white w-88 h-107 shadow-lg cursor-pointer overflow-hidden'>
+    className='text-white w-88 h-full shadow-lg cursor-pointer overflow-hidden'>
         <div className="overflow-hidden">
             <img 
-            className = 'h-48 w-full rounded-tl-lg rounded-tr-lg group-hover:scale=[1,2] transition-all ease-in-out duration-300'
-            src={data.thumbnail}
+            className = 'h-48 w-full rounded-tl-lg rounded-tr-lg hover:scale=[1,2] transition-all ease-in-out duration-300'
+            src={data.thumbnail.secure_url}
             alt="course thumbnail" />
             <div className='p-3 space-y-1 text-white'>
                 <h2 className='text-xl font-bold text-yello-500 line-clamp-2'>

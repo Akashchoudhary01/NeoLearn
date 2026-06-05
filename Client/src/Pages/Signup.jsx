@@ -79,14 +79,14 @@ const Signup = () => {
       return;
     }
 
-    if (!isPasswordValid.password ) {
+    if (!isPasswordValid(password) ) {
       toast.error(
         "Minimum password length should be 8 with Uppercase, Lowercase, Number and Symbol"
       );
       return;
     }
 
-    if (!isEmailValid.email) {
+    if (!isEmailValid(email)) {
       toast.error("Invalid email Id");
       return;
     }
