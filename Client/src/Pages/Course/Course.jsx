@@ -18,7 +18,6 @@ const Course = () => {
     // LoadCourse();
     dispatch(getAllCourse());
     // toast.success("Courses Loaded Successfully")
-  
   } , [dispatch])
   return (
     <HomeLayout>
@@ -30,8 +29,7 @@ const Course = () => {
           <div className='mb-8 flex flex-wrap gap-14'>
             {
               courseData?.map((element)=>{
-                return <CourseCard key={element._id} data={element}/>
-              })
+                return <CourseCard key={element._id} data={element}/>  })
             }
           </div>
 

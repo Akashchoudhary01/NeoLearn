@@ -29,7 +29,6 @@ function App() {
       <Route path='/course/create' element={<CreateCourse/>}/>
       </Route>
     </Routes>
-  
   )
 }
 

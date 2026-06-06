@@ -7,6 +7,7 @@ const initialState = {
   error: null,
 };
 
+//get All Course
 export const getAllCourse = createAsyncThunk(
   "/course/get",
   async (_, { rejectWithValue }) => {
@@ -29,6 +30,31 @@ export const getAllCourse = createAsyncThunk(
   },
 );
 
+// Create New Course 
+export const createNewCourse = createAsyncThunk("course/create" , async (data)=>{
+  try{
+    let formData = new FormData();
+
+    formData.append("title" , data.title);
+    formData.append("description" , data.description);
+    formData.append("category" , data.category);
+    formData.append("createdBy" , data.createdBy);
+    formData.append("thumbnail" , data.thumbnail);
+
+
+
+    const response = AxiosInstance.post("/courses" , formData);
+    toast.promise(response , {
+      success : "Course Created Successfully",
+      loading : "Creating new Course....",
+      error : "Failed to create new course"
+    })
+
+    return (await response).data;
+  }catch(error){
+    toast.error(error?.response?.data?.message)
+  }
+})
 const CourseSlice = createSlice({
   name: "course",
   initialState,

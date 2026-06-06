@@ -10,8 +10,7 @@ const CourseCard = ({data}) => {
     
     className='text-white w-88 h-full shadow-lg cursor-pointer overflow-hidden'>
         <div className="overflow-hidden">
-            <img 
-            className = 'h-48 w-full rounded-tl-lg rounded-tr-lg hover:scale=[1,2] transition-all ease-in-out duration-300'
+            <img className = 'h-48 w-full rounded-tl-lg rounded-tr-lg hover:scale=[1,2] transition-all ease-in-out duration-300'
             src={data.thumbnail.secure_url}
             alt="course thumbnail" />
             <div className='p-3 space-y-1 text-white'>
