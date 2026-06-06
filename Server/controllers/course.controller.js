@@ -58,7 +58,7 @@ const createCourse = async (req, res, next) => {
       lectures,
       thumbnail: {
         public_id: "default",
-        secure_url: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+        secure_url: "",
       },
     });
 
@@ -72,7 +72,8 @@ const createCourse = async (req, res, next) => {
         course.thumbnail.secure_url = result.secure_url;
       }
       await course.save();
-      await fs.promises.unlink(`uploads/${req.file.filename}`);
+        
+        await fs.promises.unlink(req.file.path); 
     }
     await course.save();
     return res.status(201).json({
@@ -118,7 +119,8 @@ const AddLectureToCourseById = async (req, res, next) => {
       public_id: result.public_id,
     };
     await course.save();
-    await fs.promises.unlink(`uploads/${req.file.filename}`);
+    await fs.promises.unlink(req.file.path); 
+    
   }
 
   course.lectures.push(lectureData);
@@ -225,7 +227,9 @@ const updateCourse = async (req, res, next) => {
 
         await course.save();
 
-        await fs.promises.unlink(`uploads/${req.file.filename}`);
+    await fs.promises.unlink(req.file.path); 
+
+        
       } catch (e) {
         return next(new AppError("Unable to update Thumbnail", 400));
       }

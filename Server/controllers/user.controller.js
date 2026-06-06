@@ -62,8 +62,8 @@ const register = async (req, res, next) => {
           await user.save(); // ✅ save avatar
           
           // Delete local file
-          // await fs.promises.unlink(req.file.path);
-          await fs.promises.unlink(`uploads/${req.file.filename}`);
+          await fs.promises.unlink(req.file.path);
+          
         }
       } catch (e) {
         return next (new AppError(e.message , 400));
@@ -309,7 +309,8 @@ const updateProfile = async (req, res, next) => {
         await user.save();
         
         // Delete local file
-        await fs.promises.unlink(`uploads/${req.file.filename}`);
+          await fs.promises.unlink(req.file.path);
+
       }
       
     } catch (e) {
