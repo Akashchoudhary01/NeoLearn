@@ -14,11 +14,11 @@ const Profile = () => {
             <img src={userData?.avatar?.secure_url}
             className="w-40 m-auto rounded-full outline-2"
              alt={userData?.fullName} />
-             <h1 className="text-center text-3xl m-3">{userData?.fullName}</h1>
+             <h1 className="text-center text-3xl m-3 italic capitalize">{userData?.fullName}</h1>
              <div className="grid grid-cols-2 gap-3">
-                <p>email</p><p>{userData?.email}</p>
-                <p>role</p><p>{userData?.role}</p>
-                <p>Subscription</p><p>{userData?.subscription?.status === "active" ? "Active" :"Inactive"}</p>
+                <p  className="text-[15px] text-wrap mx-12">email</p><p className="text-[15px] mx-12">{userData?.email}</p>
+                <p  className="text-[15px] mx-12">Role</p><p className="text-[15px] mx-12">{userData?.role}</p>
+                <p  className="text-[15px] mx-12">Subscription</p><p className="text-[15px] mx-12">{userData?.subscription?.status === "active" ? "Active" :"Inactive"}</p>
 
              </div>
              <div className="flex justify-between gap-2 my-3">
