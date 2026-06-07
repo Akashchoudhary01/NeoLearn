@@ -12,11 +12,11 @@ const EditProfile = () => {
     const dispatch = useDispatch();
     const nevigate  = useNavigate();
 
+    const userId = useSelector((state)=> state?.auth?.data._id)
     const [data , setData] = useState({
         fullName : "",
         avatar : undefined,
         previewImage : "",
-        userId : useSelector((state)=> state?.auth?.data._id)
     });
 
     // Handle Image Function 
@@ -49,7 +49,7 @@ const EditProfile = () => {
     // Handle Form Submit
     async function handleFormSubmit(e){
         e.preventDefault();
-        if(!data.fullName || !data.avatar){
+        if(!data.fullName){
             toast.error("Every Field is Mendatory")
             return ;
         }
@@ -59,9 +59,12 @@ const EditProfile = () => {
         }
         const formData = new FormData();
         formData.append("fullName" , data.fullName);
-        formData.append("avatar" , data.avatar)
+        if(data.avatar){
 
-        await dispatch (updateProfile(data.userId , data));
+            formData.append("avatar" , data.avatar)
+        }
+
+        await dispatch (updateProfile({id : userId , formData}));
         await dispatch(getUserData());
 
         nevigate("/user/profile")

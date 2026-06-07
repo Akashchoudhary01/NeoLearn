@@ -63,7 +63,6 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
       });
 
-
     // ========== LOGOUT ==========
     builder
       .addCase(Logout.pending, (state) => {
@@ -90,17 +89,18 @@ const authSlice = createSlice({
         localStorage.removeItem("role");
         localStorage.removeItem("data");
       })
-      .addCase(getUserData.fulfilled , (state , action )=>{
-        state.loading = false;
-        state.isLoggedIn = "true";
-        const userData = action.payload.user || action.payload.data;
+      .addCase(getUserData.fulfilled, (state, action) => {
+        state.isLoggedIn = true;
+
+        const userData = action.payload?.user || action.payload?.data;
+
         state.data = userData;
         state.role = userData?.role || "USER";
+
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", state.role);
-        localStorage.setItem("data", JSON.stringify(state.data));
-
-      })
+        localStorage.setItem("data", JSON.stringify(userData));
+      });
   },
 });
 
@@ -139,35 +139,26 @@ export const Logout = createAsyncThunk("/auth/logout", async () => {
 });
 
 // Update Profile
-export const updateProfile = createAsyncThunk("/user/update/profile", async (id , data) => {
-  try {
-    const res = await AxiosInstance.put(`/update/${id}` , data );
-    toast.promise(res , {
-      success : (data ) =>{
-        return data?.data?.message;
-      },
-      pending : "Updating Profile ...",
-      error : "Failed To Update Your Profile"
-
-    })
-    return (await res).data;
-  } catch (error) {
-    toast.error(error?.response?.data?.message || "Failed to Logout ");
-    throw error;
-  }
-});
+export const updateProfile = createAsyncThunk(
+  "/user/update/profile",
+  async ({ id, formData }, thunkAPI) => {
+    
+      const res = await AxiosInstance.put(`/user/update/${id}`, formData);
+     toast.success(res.data.message);
+      return (await res).data;
+    
+  },
+);
 
 // fetch new userData
-export const getUserData = createAsyncThunk ("user/details" , async()=>{
+export const getUserData = createAsyncThunk("user/details", async () => {
   try {
-    const res  = await AxiosInstance.get("user/me")
+    const res = await AxiosInstance.get("user/me");
     return (await res).data;
-    
   } catch (error) {
-    toast.error(error.message)
-    
+    toast.error(error.message);
   }
-})
+});
 
 export const {} = authSlice.actions;
 
