@@ -263,6 +263,8 @@ const userID = req.user.id;
 }
 
 const updateProfile = async (req, res, next) => {
+    console.log("req.body =", req.body);
+  console.log("req.file =", req.file);
   const { fullName } = req.body;
   const {role} = req.body;
   const userId = req.user.id;
