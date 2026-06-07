@@ -1,9 +1,10 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import HomeLayout from '../../Layout/HomeLayout';
 import { useSelector } from 'react-redux';
 
 const CourseDescription = () => {
+  const Navigater = useNavigate();
     const { state } = useLocation();
     console.log(state);
 
@@ -44,7 +45,7 @@ const CourseDescription = () => {
             Watch Lectures
           </button>
         ) : (
-          <button className="w-full py-3 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition duration-300 font-semibold text-black">
+          <button onClick={()=> Navigater("/checkout")}  className="w-full py-3 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition duration-300 font-semibold text-black">
             Subscribe Now
           </button>
         )}

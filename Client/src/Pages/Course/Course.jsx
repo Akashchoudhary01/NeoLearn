@@ -21,7 +21,7 @@ const Course = () => {
   } , [dispatch])
   return (
     <HomeLayout>
-        <div className='h-full pt-8 pl-20  flex flex-col gap-10  text-white'>
+        <div className='min-h-[90vh] pt-8 pl-20  flex flex-col gap-10  text-white'>
           <div className='m-10'>
 
             <h1 className='text-2xl mx-0'>Explore the course made by <span className='text-yellow-300'> Industry Expert</span></h1>
