@@ -89,7 +89,18 @@ const authSlice = createSlice({
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("role");
         localStorage.removeItem("data");
-      });
+      })
+      .addCase(getUserData.fulfilled , (state , action )=>{
+        state.loading = false;
+        state.isLoggedIn = "true";
+        const userData = action.payload.user || action.payload.data;
+        state.data = userData;
+        state.role = userData?.role || "USER";
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("role", state.role);
+        localStorage.setItem("data", JSON.stringify(state.data));
+
+      })
   },
 });
 
@@ -126,6 +137,37 @@ export const Logout = createAsyncThunk("/auth/logout", async () => {
     throw error;
   }
 });
+
+// Update Profile
+export const updateProfile = createAsyncThunk("/user/update/profile", async (id , data) => {
+  try {
+    const res = await AxiosInstance.put(`/update/${id}` , data );
+    toast.promise(res , {
+      success : (data ) =>{
+        return data?.data?.message;
+      },
+      pending : "Updating Profile ...",
+      error : "Failed To Update Your Profile"
+
+    })
+    return (await res).data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Failed to Logout ");
+    throw error;
+  }
+});
+
+// fetch new userData
+export const getUserData = createAsyncThunk ("user/details" , async()=>{
+  try {
+    const res  = await AxiosInstance.get("user/me")
+    return (await res).data;
+    
+  } catch (error) {
+    toast.error(error.message)
+    
+  }
+})
 
 export const {} = authSlice.actions;
 

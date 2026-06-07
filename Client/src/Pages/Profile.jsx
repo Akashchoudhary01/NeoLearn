@@ -28,7 +28,7 @@ const Profile = () => {
                 <button>Change Password</button>
                 </Link>
 
-                <Link to={"/edit-profile"} 
+                <Link to={"/user/editProfile"} 
                 className="w-1/2 bg-blue-500 text-center py-1 px-2 hover:bg-blue-600 active:scale-95  transition-all ease-in-out duration-300 rounded-md">
                 
                 <button>Edit Profile</button>
