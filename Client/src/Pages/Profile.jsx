@@ -1,11 +1,30 @@
 import React from "react";
 import HomeLayout from "../Layout/HomeLayout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { cancelSubscription } from "../Redux/Slices/RazorpaySlice";
+import { getUserData } from "../Redux/Slices/AuthSlice";
+import toast from "react-hot-toast";
 
 const Profile = () => {
     const userData = useSelector((state)=> state?.auth?.data);
     console.log(userData);
+    const dispatch = useDispatch();
+
+ async function HandleCourseUnsubscribe() {
+  const confirmed = window.confirm(
+    "Are you sure you want to cancel your subscription?"
+  );
+
+  if (!confirmed) return;
+
+  const result = await dispatch(cancelSubscription());
+
+  if (result?.payload?.success) {
+    await dispatch(getUserData());
+    toast.success("Subscription cancelled successfully");
+  }
+}
     
   return (
     <HomeLayout>
@@ -35,7 +54,7 @@ const Profile = () => {
                 </Link>
                 </div>
                 {userData ?.subscription?.status === "active" &&(
-                   <button className=" bg-gray-100 text-center py-1 px-2 text-black hover:bg-zinc-300 active:scale-95  transition-all ease-in-out duration-300 rounded-md">Cancel Subscription</button>
+                   <button onClick={ HandleCourseUnsubscribe} className=" bg-gray-100 text-center py-1 px-2 text-black hover:bg-zinc-300 active:scale-95  transition-all ease-in-out duration-300 rounded-md">Cancel Subscription</button>
                 )}
 
         </div>

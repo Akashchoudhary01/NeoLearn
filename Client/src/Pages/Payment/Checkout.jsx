@@ -102,6 +102,7 @@ const Checkout = () => {
           );
 
           navigate("/checkout/success");
+        
         } else {
           navigate("checkout/failed");
         }
