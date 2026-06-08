@@ -34,7 +34,7 @@ const Profile = () => {
                 <button>Edit Profile</button>
                 </Link>
                 </div>
-                {userData ?.subscription?.status !== "active" &&(
+                {userData ?.subscription?.status === "active" &&(
                    <button className=" bg-gray-100 text-center py-1 px-2 text-black hover:bg-zinc-300 active:scale-95  transition-all ease-in-out duration-300 rounded-md">Cancel Subscription</button>
                 )}
 

@@ -8,34 +8,64 @@ import {
   purchaseCourseBundle,
   verifyUserPayment,
 } from "../../Redux/Slices/RazorpaySlice";
+import { getUserData } from "../../Redux/Slices/AuthSlice";
 import toast from "react-hot-toast";
 
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const razorpayKey = useSelector((state) => state?.razorpay?.key);
-  const subscription_id = useSelector(
-    (state) => state?.razorpay?.subscription_id
+  const razorpayKey = useSelector(
+    (state) => state.razorpay.key
   );
 
-  const userData = useSelector((state) => state?.auth?.data);
+  const userData = useSelector(
+    (state) => state.auth.data
+  );
+
+  useEffect(() => {
+    dispatch(getRazorPayId());
+  }, [dispatch]);
 
   const handleSubscription = async (e) => {
     e.preventDefault();
-    console.log("Razorpay Key:", razorpayKey);
-console.log("Subscription ID:", subscription_id);
 
-    if (!razorpayKey || !subscription_id) {
+    if (!razorpayKey) {
       toast.error("Unable to initialize payment");
+      return;
+    }
+
+    // Prevent already subscribed users
+    if (userData?.subscription?.status === "active") {
+      toast.error("You already have an active subscription");
+      return;
+    }
+
+    // Create subscription ONLY when Buy Now is clicked
+    const subscriptionResponse = await dispatch(
+      purchaseCourseBundle()
+    );
+
+    console.log(
+      "SUB RESPONSE:",
+      subscriptionResponse
+    );
+
+    const subscriptionId =
+      subscriptionResponse?.payload?.subscription_id;
+
+    if (!subscriptionId) {
+      toast.error("Unable to create subscription");
       return;
     }
 
     const options = {
       key: razorpayKey,
-      subscription_id: subscription_id,
+      subscription_id: subscriptionId,
+
       name: "NeoLearn PVT. LTD.",
       description: "Annual Subscription",
+
       theme: {
         color: "#facc15",
       },
@@ -47,18 +77,30 @@ console.log("Subscription ID:", subscription_id);
 
       handler: async function (response) {
         const paymentDetails = {
-          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_payment_id:
+            response.razorpay_payment_id,
           razorpay_subscription_id:
             response.razorpay_subscription_id,
-          razorpay_signature: response.razorpay_signature,
+          razorpay_signature:
+            response.razorpay_signature,
         };
 
         const result = await dispatch(
           verifyUserPayment(paymentDetails)
         );
 
+        console.log(
+          "VERIFY RESULT:",
+          result
+        );
+
         if (result?.payload?.success) {
-          toast.success("Payment Successful!");
+          await dispatch(getUserData());
+
+          toast.success(
+            "Payment Verified Successfully"
+          );
+
           navigate("/checkout/success");
         } else {
           navigate("/checkout/failure");
@@ -66,40 +108,18 @@ console.log("Subscription ID:", subscription_id);
       },
 
       modal: {
-        ondismiss: function () {
+        ondismiss: () => {
           toast.error("Payment cancelled");
         },
       },
     };
 
-    const paymentObject = new window.Razorpay(options);
+    const paymentObject = new window.Razorpay(
+      options
+    );
+
     paymentObject.open();
   };
-
-useEffect(() => {
-  const loadPaymentData = async () => {
-    const keyRes = await dispatch(getRazorPayId());
-    console.log("KEY RESPONSE:", keyRes);
-
-    const subRes = await dispatch(purchaseCourseBundle());
-    console.log("SUB RESPONSE:", subRes);
-
-    console.log("SUB TYPE:", subRes.type);
-    console.log("SUB PAYLOAD:", subRes.payload);
-    console.log("SUB ERROR:", subRes.error);
-  };
-
-  loadPaymentData();
-}, [dispatch]);
-
-
-useEffect(() => {
-  console.log("Current Razorpay State:", {
-    razorpayKey,
-    subscription_id,
-  });
-}, [razorpayKey, subscription_id]);
-
   return (
     <HomeLayout>
       <div className="min-h-[90vh] flex justify-center items-center px-4 py-10">
