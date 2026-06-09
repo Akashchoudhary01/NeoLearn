@@ -63,8 +63,8 @@ const CourseSlice = createSlice({
     builder
       .addCase(getAllCourse.fulfilled, (state, action) => {
         if (action.payload) {
-          console.log(action.payload);
-          console.log("Hello ");
+          // console.log(action.payload);
+          // console.log("Hello ");
 
           state.courseData = [...action.payload];
         }
