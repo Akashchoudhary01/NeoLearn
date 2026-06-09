@@ -7,8 +7,10 @@ const CourseDescription = () => {
   const Navigater = useNavigate();
     const { state } = useLocation();
     console.log(state);
+    
 
     const {data , role} = useSelector((state)=> state.auth);
+
     
   return (
     <HomeLayout>
@@ -41,9 +43,16 @@ const CourseDescription = () => {
 
         {role === "ADMIN" ||
         data?.subscription?.status === "active" ? (
-          <button className="w-full py-3 rounded-lg bg-green-600 hover:bg-green-700 transition duration-300 font-semibold">
-            Watch Lectures
-          </button>
+           
+          <button
+          className="w-full py-3 rounded-lg bg-green-600 hover:bg-green-700 transition duration-300 font-semibold"
+          onClick={()=>  Navigater("/courses/lecture" , {
+            state: state?.data 
+           } )}
+          >
+         
+  Watch Lectures
+</button>
         ) : (
           <button onClick={()=> Navigater("/checkout")}  className="w-full py-3 rounded-lg bg-yellow-500 hover:bg-yellow-600 transition duration-300 font-semibold text-black">
             Subscribe Now
