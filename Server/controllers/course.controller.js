@@ -25,6 +25,7 @@ const getAllCourse = async (req, res, next) => {
 //////////////////////
 /////////////////////
 const getLectureByCourseId = async (req, res, next) => {
+  console.log("PARAMS:", req.params);
   const courseId = req.params.id;
 
   const course = await COURSE.findById(courseId);
@@ -109,6 +110,7 @@ const AddLectureToCourseById = async (req, res, next) => {
   if (req.file) {
     const result = await cloudinary.v2.uploader.upload(req.file.path, {
       folder: "neoLearn",
+      resource_type : "video"
     });
     if (!result) {
       return next(new AppError("Something Went Wrong", 400));
@@ -118,12 +120,13 @@ const AddLectureToCourseById = async (req, res, next) => {
       secure_url: result.secure_url,
       public_id: result.public_id,
     };
-    await course.save();
+    
     await fs.promises.unlink(req.file.path); 
     
   }
-
+  
   course.lectures.push(lectureData);
+  // await course.save();/
 
   course.noOfLecture = course.lectures.length;
   await course.save();

@@ -6,6 +6,7 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
   },
+  
 
   filename: (req, file, cb) => {
     const uniqueName =
@@ -24,7 +25,10 @@ const fileFilter = (req, file, cb) => {
     ext !== ".jpeg" &&
     ext !== ".webp" &&
     ext !== ".png" &&
-    ext !== ".mp4"
+    ext !== ".mp4" &&
+    ext !== ".mov" &&
+    ext !== ".webm" &&
+    ext !==  ".mkv"
   ) {
     return cb(
       new Error(`Unsupported file type! ${ext}`),
