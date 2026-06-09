@@ -107,6 +107,23 @@ export const cancelSubscription = createAsyncThunk(
   }
 );
 
+export const getPaymentRecord = createAsyncThunk("/payment/record" , async()=>{
+  try {
+    const response = await AxiosInstance.get("/payment?count=100" , );
+    toast.promise(response , {
+      loading : "Getting The Payment Record",
+      success : (data)=>{
+         return data?.data?.message
+      },
+      error : "Failed to get Payment Record "
+    })
+    
+  } catch (error) {
+    toast.error(error?.response?.data?.message)
+    
+  }
+})
+
 const razorpaySlice = createSlice({
   name: "razorpay",
   initialState,
@@ -160,7 +177,15 @@ const razorpaySlice = createSlice({
 
       .addCase(verifyUserPayment.rejected, (state) => {
         state.isPaymentVerified = false;
-      });
+      })
+
+      .addCase(getPaymentRecord.fulfilled , (state , action)=> 
+    {
+        state.allPayment = action?.payload?.allPayment,
+        state.monthlySalesRecord = action?.payload?.monthlySalesRecord,
+        state.finalMonth = action?.payload?.finalMonth
+
+      })
   },
 });
 
