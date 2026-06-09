@@ -37,96 +37,140 @@ export default function DisplayLectures() {
   return (
     <div>
       <HomeLayout>
-        <div className=" flex flex-col  items-center min-h-[90vh] py-10 text-white mx-10">
-          <div className="text-center text-2xl text-blue-500">
-            Course Name : <span className="font-semibold ">{state?.title}</span>
-          </div>
-          {lectures && lectures.length > 0 ? (
-            <div className="flex justify-center w-full gap-10 mt-10  ">
-              {/* Left section for displaying course details and details to admin */}
-              <div className="py-5 w-md  p-2 rounded-lg shadow-[0_0_10px_black]">
-                <video
-                  controls
-                  className="object-fill rounded-tl-lg py-3 rounded-tr-lg w-full"
-                  disablePictureInPicture
-                  muted
-                  controlsList="nodownload"
-                  src={lectures && lectures[currentVideo]?.video?.secure_url}
-                ></video>
-                <div>
-                  <h2 className="text-green-500 text-xl ">
-                    {" "}
-                    {""} {lectures?.[currentVideo]?.title}
-                  </h2>
-                  <p className="text-gray-500 text- line-clamp-4">
-                    {" "}
-                    {""} {lectures?.[currentVideo]?.description}
-                  </p>
+      <div className="flex flex-col items-center min-h-[90vh] py-8 px-4 text-white">
+  {/* Header */}
+  <div className="text-center mb-8">
+    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-500">
+      {state?.title}
+    </h1>
+
+    <p className="text-gray-400 mt-2 text-sm sm:text-base">
+      {lectures?.length || 0} Lecture
+      {lectures?.length !== 1 ? "s" : ""}
+    </p>
+  </div>
+
+  {lectures?.length > 0 ? (
+    <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      {/* Video Section */}
+      <div className="bg-gray-900 rounded-2xl p-4 sm:p-6 shadow-[0_0_15px_rgba(0,0,0,0.4)]">
+        <video
+          controls
+          disablePictureInPicture
+          controlsList="nodownload"
+          className="w-full rounded-xl"
+          src={lectures?.[currentVideo]?.video?.secure_url}
+        />
+
+        <div className="mt-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-green-400">
+            {lectures?.[currentVideo]?.title}
+          </h2>
+
+          <p className="text-gray-300 mt-3 leading-relaxed text-sm sm:text-base">
+            {lectures?.[currentVideo]?.description}
+          </p>
+        </div>
+      </div>
+
+      {/* Lecture List */}
+      <div className="bg-gray-900 rounded-2xl p-4 sm:p-6 shadow-[0_0_15px_rgba(0,0,0,0.4)]">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 items-center justify-between mb-5">
+          <h2 className="text-xl sm:text-2xl font-semibold">
+            Lecture List
+          </h2>
+
+          {role === "ADMIN" && (
+            <button
+              onClick={() =>
+                navigate("/courses/lecture/add", {
+                  state: { ...state },
+                })
+              }
+              className="w-full sm:w-auto bg-green-500 px-4 py-2 rounded-md hover:bg-green-600 transition"
+            >
+              Add Lecture
+            </button>
+          )}
+        </div>
+
+        <div className="space-y-3 max-h-[450px] overflow-y-auto pr-1">
+          {lectures.map((lecture, idx) => (
+            <div
+              key={lecture._id}
+              className={`p-4 rounded-xl border transition-all ${
+                currentVideo === idx
+                  ? "border-blue-500 bg-blue-500/10"
+                  : "border-gray-700 hover:border-gray-500"
+              }`}
+            >
+              <div
+                onClick={() => setCurrentVideo(idx)}
+                className="cursor-pointer"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div>
+                    <p className="font-medium text-sm sm:text-base">
+                      Lecture {idx + 1}
+                    </p>
+
+                    <p className="text-gray-300 text-sm">
+                      {lecture.title}
+                    </p>
+                  </div>
+
+                  {currentVideo === idx && (
+                    <span className="text-blue-400 text-xs sm:text-sm">
+                      Playing
+                    </span>
+                  )}
                 </div>
               </div>
-              {/* Right Section for displaying List of leccture */}
-              <ul className="w-md p-2 rounded-lg shadow-[0_0_5px_black]">
-                <li>
-                  <p className="text-2xl">Lecture List </p>
-                  {role === "ADMIN" && (
-                    <button
-                      onClick={() =>
-                        navigate("/courses/lecture/add", {
-                          state: { ...state },
-                        })
-                      }
-                      className="bg-green-500 px-3 py-1 roundex-md hover:bg-green-600 transition-all ease-in-out duration-300"
-                    >
-                      Add Lecture
-                    </button>
-                  )}
-                </li>
-                {lectures &&
-                  lectures.map((lecture, idx) => {
-                    return (
-                      <li className="space-y-3" key={lecture._id}>
-                        <p
-                          className="cursor-pointer "
-                          onClick={() => setCurrentVideo(idx)}
-                        >
-                          <span> Lecture {idx + 1}</span>
-                          {lecture.title}
-                        </p>
-                        {role === "ADMIN" && (
-                          <button
-                            onClick={() =>
-                              handelLectureDeletion(state?._id, lecture?._id)
-                            }
-                            className="bg-red-500 px-3 py-1 roundex-md hover:bg-red-600 transition-all ease-in-out duration-300"
-                          >
-                            Delete Lecture
-                          </button>
-                        )}
-                      </li>
-                    );
-                  })}
-              </ul>
-            </div>
-          ) : (
-            <>
-              <h1 className="mt-10 text-4xl">
-                No Lecture Available For This Course
-              </h1>
+
               {role === "ADMIN" && (
                 <button
                   onClick={() =>
-                    navigate("/courses/lecture/add", {
-                      state: state?.data,
-                    })
+                    handelLectureDeletion(
+                      state?._id,
+                      lecture?._id
+                    )
                   }
-                  className="bg-green-500 px-3 py-1 mt-4 roundex-md hover:bg-green-600 transition-all ease-in-out duration-300"
+                  className="mt-3 w-full sm:w-auto bg-red-500 px-3 py-2 rounded-md hover:bg-red-600 transition"
                 >
-                  Add Lecture
+                  Delete Lecture
                 </button>
               )}
-            </>
-          )}
+            </div>
+          ))}
         </div>
+      </div>
+    </div>
+  ) : (
+    <div className="text-center mt-16 px-4">
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-300">
+        No Lectures Available
+      </h1>
+
+      <p className="text-gray-500 mt-3 text-sm sm:text-base">
+        Start by adding your first lecture.
+      </p>
+
+      {role === "ADMIN" && (
+        <button
+          onClick={() =>
+            navigate("/courses/lecture/add", {
+              state,
+            })
+          }
+          className="mt-6 bg-green-500 px-6 py-3 rounded-lg hover:bg-green-600 transition"
+        >
+          Add First Lecture
+        </button>
+      )}
+    </div>
+  )}
+</div>
       </HomeLayout>
     </div>
   );
