@@ -41,10 +41,10 @@ const Profile = () => {
 
              </div>
              <div className="flex justify-between gap-2 my-3">
-                <Link to={"/changePassword"} 
+                <Link to={"/password/changePassword"} 
                 className="w-1/2 bg-yellow-500 text-center py-1 px-2 hover:bg-yellow-600 active:scale-95  transition-all ease-in-out duration-300 rounded-md">
                 
-                <button>Change Password</button>
+                <button >Change Password</button>
                 </Link>
 
                 <Link to={"/user/editProfile"} 

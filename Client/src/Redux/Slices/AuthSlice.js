@@ -138,6 +138,8 @@ export const Logout = createAsyncThunk("/auth/logout", async () => {
   }
 });
 
+
+
 // Update Profile
 export const updateProfile = createAsyncThunk(
   "/user/update/profile",
@@ -149,6 +151,21 @@ export const updateProfile = createAsyncThunk(
     
   },
 );
+
+// Async Thunk for Change Password
+export const ChangePasswordThunk = createAsyncThunk("/password/changePassword", async (data) => {
+  // Pass the promise itself to the toast, do not await it first
+  const promise = AxiosInstance.post("/user/changepassword", data);
+  
+  toast.promise(promise, {
+    loading: "Changing password...",
+    success: (res) => res.data?.message || "Success",
+    error: (err) => err.response?.data?.message || "Failed to change password"
+  });
+
+  const res = await promise;
+  return res.data;
+});
 
 // fetch new userData
 export const getUserData = createAsyncThunk("user/details", async () => {
