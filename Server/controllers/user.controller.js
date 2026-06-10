@@ -60,10 +60,9 @@ const register = async (req, res, next) => {
           user.avatar.secure_url = result.secure_url;
           
           await user.save(); // ✅ save avatar
-          
-          // Delete local file
-          await fs.promises.unlink(req.file.path);
-          
+         if (fs.existsSync(req.file.path)) {
+      await fs.promises.unlink(req.file.path);
+    }
         }
       } catch (e) {
         return next (new AppError(e.message , 400));
@@ -313,9 +312,9 @@ const updateProfile = async (req, res, next) => {
 
         await user.save();
         
-        // Delete local file
-          await fs.promises.unlink(req.file.path);
-
+        if (fs.existsSync(req.file.path)) {
+      await fs.promises.unlink(req.file.path);
+    }
       }
       
     } catch (e) {
