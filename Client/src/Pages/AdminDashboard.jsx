@@ -49,6 +49,7 @@ const AdminDashboard = () => {
   // Pie Chart Data
   const userData = {
     labels: ["Registered Users", "Enrolled Users"],
+    
     datasets: [
       {
         label: "User Count",
@@ -59,6 +60,7 @@ const AdminDashboard = () => {
       },
     ],
   };
+  // console.log(userData);
 
   // Bar Chart Data
   const salesData = {
@@ -81,6 +83,12 @@ const AdminDashboard = () => {
       }
     }
   }
+ useEffect(() => {
+  console.log("Users Stats:", {
+    allUsersCount,
+    SubscribedCount,
+  });
+}, [allUsersCount, SubscribedCount]);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -35,8 +35,13 @@ const statSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getStateData.fulfilled, (state, action) => {
       // FIX: Used semicolons instead of commas 
-      state.allUsersCount = action?.payload?.allUsersCount;
-      state.SubscribedCount = action?.payload?.SubscribedCount;
+      console.log("data" , action.payload);
+      
+      state.allUsersCount = action?.payload?.allUserCount;
+
+      state.SubscribedCount = action?.payload?.
+subscribedUserCount
+;
     });
   },
 });

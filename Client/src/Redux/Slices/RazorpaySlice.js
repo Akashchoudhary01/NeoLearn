@@ -19,11 +19,9 @@ export const getRazorPayId = createAsyncThunk(
         "/payments/razorpay-key"
       );
 
-      console.log("RAZORPAY KEY RESPONSE:", response.data);
 
       return response.data;
     } catch (error) {
-      console.log("KEY ERROR:", error?.response?.data);
 
       toast.error(
         error?.response?.data?.message ||
@@ -43,18 +41,10 @@ export const purchaseCourseBundle = createAsyncThunk(
         "/payments/subscribe"
       );
 
-      console.log(
-        "SUBSCRIBE RESPONSE:",
-        response.data
-      );
 
       return response.data;
     } catch (error) {
-      console.log("SUBSCRIBE ERROR:", error);
-      console.log(
-        "SUBSCRIBE ERROR DATA:",
-        error?.response?.data
-      );
+      
 
       toast.error(
         error?.response?.data?.message ||
@@ -107,23 +97,22 @@ export const cancelSubscription = createAsyncThunk(
   }
 );
 
-export const getPaymentRecord = createAsyncThunk("/payment/record" , async()=>{
-  try {
-    const response = await AxiosInstance.get("/payment?count=100" , );
-    toast.promise(response , {
-      loading : "Getting The Payment Record",
-      success : (data)=>{
-         return data?.data?.message
-      },
-      error : "Failed to get Payment Record "
-    })
-    
-  } catch (error) {
-    toast.error(error?.response?.data?.message)
-    
-  }
-})
+export const getPaymentRecord = createAsyncThunk(
+  "/payment/record",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await AxiosInstance.get("/payments?count=100");
 
+
+      return response.data;
+    } catch (error) {
+
+      return rejectWithValue(
+        error?.response?.data || { message: "Request failed" }
+      );
+    }
+  }
+);
 const razorpaySlice = createSlice({
   name: "razorpay",
   initialState,
@@ -133,37 +122,16 @@ const razorpaySlice = createSlice({
     builder
 
       .addCase(getRazorPayId.fulfilled, (state, action) => {
-        console.log(
-          "KEY FULFILLED PAYLOAD:",
-          action.payload
-        );
+       
 
         state.key = action?.payload?.key || "";
 
-        console.log("STATE KEY:", state.key);
+        // console.log("STATE KEY:", state.key);
       })
 
-      .addCase(purchaseCourseBundle.fulfilled, (state, action) => {
-        console.log(
-          "SUB FULFILLED PAYLOAD:",
-          action.payload
-        );
 
-        state.subscription_id =
-          action?.payload?.subscription_id || "";
 
-        console.log(
-          "STATE SUB ID:",
-          state.subscription_id
-        );
-      })
-
-      .addCase(purchaseCourseBundle.rejected, (state, action) => {
-        console.log(
-          "SUB REJECTED:",
-          action.payload
-        );
-      })
+     
 
       .addCase(verifyUserPayment.fulfilled, (state, action) => {
         state.isPaymentVerified =
@@ -181,11 +149,12 @@ const razorpaySlice = createSlice({
 
       .addCase(getPaymentRecord.fulfilled , (state , action)=> 
     {
-        state.allPayment = action?.payload?.allPayment,
+        state.allPayment = action?.payload?.payments,
         state.monthlySalesRecord = action?.payload?.monthlySalesRecord,
         state.finalMonth = action?.payload?.finalMonth
 
       })
+   
   },
 });
 
