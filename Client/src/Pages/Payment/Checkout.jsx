@@ -164,7 +164,7 @@ const Checkout = () => {
               <p>✅ Unlimited Course Access</p>
               <p>✅ New Courses Included</p>
               <p>✅ 100% Refund on Cancellation</p>
-              <p>✅ Priority Support</p>
+              {/* <p>✅ Priority Support</p> */}
             </div>
 
             {/* Terms */}

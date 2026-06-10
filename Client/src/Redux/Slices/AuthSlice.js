@@ -167,6 +167,54 @@ export const ChangePasswordThunk = createAsyncThunk("/password/changePassword", 
   return res.data;
 });
 
+//Async thunk for forgot password
+
+export const ForgotPasswordThunk = createAsyncThunk(
+  "/password/reset",
+  async (data, { rejectWithValue }) => {
+    try {
+      const request = AxiosInstance.post("/user/reset", data);
+
+      toast.promise(request, {
+        loading: "Sending Email...",
+        success: (res) =>
+          res.data?.message || "Reset password mail sent successfully",
+        error: (err) =>
+          err.response?.data?.message || "Failed to send email",
+      });
+
+      const response = await request;
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+);
+
+// Reset Password Thunk
+export const resetPassword = createAsyncThunk(
+  "/password/reset-password",
+  async ({ token, password }, { rejectWithValue }) => {
+    try {
+      const res = await AxiosInstance.post(
+        `/user/reset/${token}`,
+        { password }
+      );
+
+      toast.success(res.data.message);
+
+      return res.data;
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to reset password"
+      );
+
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 // fetch new userData
 export const getUserData = createAsyncThunk("user/details", async () => {
   try {
@@ -177,6 +225,5 @@ export const getUserData = createAsyncThunk("user/details", async () => {
   }
 });
 
-export const {} = authSlice.actions;
 
 export default authSlice.reducer;

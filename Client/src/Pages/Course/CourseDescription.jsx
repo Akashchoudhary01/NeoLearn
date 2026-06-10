@@ -42,7 +42,7 @@ const CourseDescription = () => {
         </div>
 
         {role === "ADMIN" ||
-        data?.subscription?.status === "active" ? (
+        data?.subscription?.status === "active" ?  (
            
           <button
           className="w-full py-3 rounded-lg bg-green-600 hover:bg-green-700 transition duration-300 font-semibold"

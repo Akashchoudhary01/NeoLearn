@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import HomeLayout from "../../Layout/HomeLayout";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { isPasswordValid } from "../../Helpers/regexHelper";
@@ -83,6 +83,9 @@ const ChangePassword = () => {
 
             <button type="submit" className=" items-center justify-center flex  mt-2 w-full text-center py-2 px-3 rounded-md bg-blue-500 hover:bg-blue-600 transition-all ease-in-out duration-300 ">Change Password</button>
           </form>
+          <Link to={"/password/reset"}>
+          <p className="flex justify-end text-blue-500 cursor-pointer mt-2">Forgot password ? </p>
+          </Link>
         </div>
       </div>
     </HomeLayout>
