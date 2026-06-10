@@ -243,8 +243,11 @@ const userID = req.user.id;
   if(!user){
     return next (new AppError('User does Not exists' , 400) );
   }
+  console.log("oldPassword" , oldPassword);
+  console.log("new Password" , newPassword);
+  
 
-  const isPasswordValid = user.comparePassword(oldPassword);
+  const isPasswordValid = await user.comparePassword(oldPassword);
 
   if(!isPasswordValid){
     return next (new AppError('Invalid Password' ,400));
