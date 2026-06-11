@@ -21,17 +21,17 @@ export const StudentData = [
     slideNumber: 2,
   },
   {
-    title: "Rishabh Choudhary",
+    title: "Akash Rishabh",
     description:
       "I was able to switch careers after completing several courses on NeoLearn. The learning experience was smooth and highly valuable.",
     image: student3,
     slideNumber: 3,
   },
   {
-    title: "Rohit Patel",
+    title: "Rohit kumar",
     description:
       "From beginner to job-ready, NeoLearn guided me through every step. The practical assignments were especially helpful.",
     image: student5,
-    slideNumber: 5,
+    slideNumber: 4,
   },
 ];

@@ -1,7 +1,5 @@
 import React from "react";
 import HomeLayout from "../Layout/HomeLayout";
-
-// Main Image
 import AboutImg from "../assets/Assets/Images/aboutMainImage.png";
 import Carousel from "../Layout/Carousel.jsx";
 import { CelebrityData } from "../Constants/CelebrityData.js";
@@ -9,7 +7,7 @@ import { CelebrityData } from "../Constants/CelebrityData.js";
 const AboutUs = () => {
   return (
     <HomeLayout>
-      <div className="px-4 sm:px-6 lg:px-10 py-10 lg:py-16 text-white">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 lg:py-16 bg-base-100 text-base-content transition-colors duration-300">
         
         {/* Top Section */}
         <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-16">
@@ -20,14 +18,14 @@ const AboutUs = () => {
               Affordable & Quality Learning
             </h1>
 
-            <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+            <p className="text-base-content/80 text-base sm:text-lg leading-relaxed">
               NeoLearn is a thoughtfully designed learning platform that
               brings high-quality courses together in one place. With
               structured content and easy navigation, it helps you build
               skills at your own pace.
             </p>
 
-            <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+            <p className="text-base-content/80 text-base sm:text-lg leading-relaxed">
               With a balance of clarity and practical exposure, NeoLearn
               is built for learners who value consistency and real
               progress. Learn from industry experts and gain practical
@@ -40,19 +38,16 @@ const AboutUs = () => {
             <img
               src={AboutImg}
               alt="About NeoLearn"
-              className="w-full max-w-xs sm:max-w-md lg:max-w-lg drop-shadow-2xl"
+              className="w-full max-w-xs sm:max-w-md lg:max-w-lg drop-shadow-2xl rounded-lg"
             />
           </div>
         </div>
 
         {/* Student Testimonials Section */}
-        <div className="mt-16 lg:mt-24">
-          <div className="text-center mb-8">
-            
-          </div>
-
+      <div className="mt-16 lg:mt-24">
           <div className="max-w-5xl mx-auto">
-            <div className="carousel w-full rounded-xl overflow-hidden">
+            {/* FIX: Use bg-base-200 and text-base-content */}
+            <div className="carousel w-full rounded-xl overflow-hidden bg-base-200 text-base-content">
               {CelebrityData &&
                 CelebrityData.map((celebrity) => (
                   <Carousel
@@ -64,6 +59,7 @@ const AboutUs = () => {
             </div>
           </div>
         </div>
+
       </div>
     </HomeLayout>
   );

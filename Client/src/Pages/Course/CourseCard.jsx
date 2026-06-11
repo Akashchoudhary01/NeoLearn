@@ -1,44 +1,43 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 
-
 const CourseCard = ({data}) => {
     const navigate = useNavigate();
+    
   return (
     <div
-    onClick={()=> navigate('/course/description' ,{ state:{data}})}
-    
-    className='text-white w-88 h-full shadow-lg cursor-pointer overflow-hidden'>
+      onClick={()=> navigate('/course/description' ,{ state:{data}})}
+      className='w-80 shadow-lg cursor-pointer overflow-hidden rounded-lg bg-base-100 hover:shadow-2xl transition-all duration-300'
+    >
         <div className="overflow-hidden">
-            <img className = 'h-48 w-full rounded-tl-lg rounded-tr-lg hover:scale=[1,2] transition-all ease-in-out duration-300'
-            src={data.thumbnail.secure_url}
-            alt="course thumbnail" />
-            <div className='p-3 space-y-1 text-white'>
-                <h2 className='text-xl font-bold text-yello-500 line-clamp-2'>
+            <img 
+              className='h-48 w-full object-cover transition-transform duration-300 hover:scale-105'
+              src={data.thumbnail.secure_url}
+              alt="course thumbnail" 
+            />
+            
+            <div className='p-4 space-y-2 text-base-content'>
+                <h2 className='text-xl font-bold text-primary line-clamp-2'>
                     {data?.title}
                 </h2>
-                <p className='line-clamp-2'>
-                    
+                
+                <p className='text-base-content/80 line-clamp-2'>
                      {data?.description}
                 </p>
-                <p className='line-clamp-2'>
-                      <span className='text-yellow-500 font-bold'> Category : </span>
-                     {data?.category}
+                
+                <p className='text-sm'>
+                      <span className='text-primary font-bold'> Category: </span>
+                      {data?.category}
                 </p>
-                <p className='line-clamp-2'>
-                    <span className='text-yellow-500 font-bold'> Total Lecture : </span>
-                     {data?.numberofLecture}
+                
+                <p className='text-sm'>
+                      <span className='text-primary font-bold'> Total Lectures: </span>
+                      {data?.numberofLecture}
                 </p>
-                <p className='line-clamp-2'>
-                     {}
-                </p>
-
             </div>
         </div>
-      
     </div>
   )
 }
 
 export default CourseCard;
- 

@@ -6,7 +6,6 @@ import CourseCard from "./CourseCard";
 
 const Course = () => {
   const dispatch = useDispatch();
-
   const { courseData, loading } = useSelector((state) => state.course);
 
   useEffect(() => {
@@ -15,16 +14,17 @@ const Course = () => {
 
   return (
     <HomeLayout>
-      <div className="min-h-[90vh] text-white px-4 sm:px-8 lg:px-12 py-10">
+      {/* Container with base-100 background and base-content text */}
+      <div className="min-h-[90vh] bg-base-100 text-base-content px-4 sm:px-8 lg:px-12 py-10 transition-colors duration-300">
         
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold">
             Explore Courses Created by{" "}
-            <span className="text-yellow-300">Industry Experts</span>
+            <span className="text-primary">Industry Experts</span>
           </h1>
 
-          <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+          <p className="text-base-content/70 mt-4 max-w-2xl mx-auto">
             Learn from experienced professionals and gain practical skills
             through high-quality courses designed for real-world success.
           </p>
@@ -33,7 +33,7 @@ const Course = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center py-20">
-            <span className="loading loading-spinner loading-lg"></span>
+            <span className="loading loading-spinner loading-lg text-primary"></span>
           </div>
         )}
 
@@ -43,7 +43,7 @@ const Course = () => {
             <h2 className="text-2xl font-semibold">
               No Courses Available
             </h2>
-            <p className="text-gray-400 mt-2">
+            <p className="text-base-content/70 mt-2">
               Please check back later.
             </p>
           </div>

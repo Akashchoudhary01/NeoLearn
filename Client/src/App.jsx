@@ -23,8 +23,12 @@ import AdminDashboard from './Pages/AdminDashboard'
 import ChangePassword from './Pages/Password/ChangePassword'
 import ResetPassword from './Pages/Password/ResetPassword'
 import ResetPasswordRedirect from './Pages/Password/ResetPasswordRedirect'
+// import ThemeToggle from './Components/ThemeToggle'
 function App() {
   return (
+    <>
+    
+
     <Routes>
       <Route path='/' element={<HomePage/>}/>
       <Route path='/about' element={<AboutUs/>}/>
@@ -55,6 +59,8 @@ function App() {
  element={<ResetPasswordRedirect/>}/>
       </Route>
     </Routes>
+    </>
+   
   )
 }
 

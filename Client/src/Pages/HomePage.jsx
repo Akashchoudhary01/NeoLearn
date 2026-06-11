@@ -8,25 +8,24 @@ import Carousel from "../Layout/Carousel.jsx";
 // import {  } from "../Constants/CelebrityData.js";
 import {StudentData} from '../Constants/StudentData.js'
 
-
 const HomePage = () => {
   return (
     <HomeLayout>
       {/* Hero Section */}
-      <div className="min-h-[90vh] bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white">
+      <div className="min-h-[90vh] bg-base-100 text-base-content transition-colors duration-300">
         <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-12 px-6 lg:px-16 py-16">
           
           {/* Left Content */}
           <div className="w-full lg:w-1/2 space-y-6 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
               Find Our Best{" "}
-              <span className="text-yellow-300">Online Courses</span>
+              <span className="text-primary">Online Courses</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-gray-300">
+            <p className="text-lg md:text-xl text-base-content/80">
               We have a large library of online courses taught by highly
               skilled and qualified faculty at a very{" "}
-              <span className="italic text-yellow-200">
+              <span className="italic text-secondary">
                 affordable cost
               </span>
               .
@@ -34,13 +33,13 @@ const HomePage = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link to="/courses">
-                <button className="bg-yellow-300 text-black px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-yellow-400 hover:scale-105 transition-all duration-300 active:scale-95">
+                <button className="btn btn-primary shadow-lg hover:scale-105 transition-all duration-300">
                   Explore Courses
                 </button>
               </Link>
 
               <Link to="/contact">
-                <button className="bg-indigo-500 text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-indigo-600 hover:scale-105 transition-all duration-300 active:scale-95">
+                <button className="btn btn-secondary shadow-lg hover:scale-105 transition-all duration-300">
                   Contact Us
                 </button>
               </Link>
@@ -59,49 +58,40 @@ const HomePage = () => {
       </div>
 
       {/* About Section */}
-      <section className="px-6  bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 lg:px-16 py-20 text-white">
+      <section className="px-6 bg-base-200 lg:px-16 py-20 text-base-content transition-colors duration-300">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
           
-             <div className="w-full lg:w-1/2 flex justify-center">
+          <div className="w-full lg:w-1/2 flex justify-center">
             <img
               src={mainimage2}
               alt="About NeoLearn"
               className="w-full max-w-md lg:max-w-lg drop-shadow-2xl"
             />
           </div>
-         {/* About Text */}
-<div className="w-full lg:w-1/2 space-y-6">
-  <h2 className="text-4xl font-bold">
-    Your Future Starts Here
-  </h2>
-
-  <p className="text-gray-300 text-lg leading-relaxed">
-    Discover courses that help you build valuable skills, advance your
-    career, and stay ahead in a rapidly changing world. Learn anytime,
-    anywhere, at your own pace.
-  </p>
-
-  <p className="text-gray-300 text-lg leading-relaxed">
-    From technology and business to personal development, our learning
-    platform offers high-quality content created by industry experts to
-    help you achieve your goals with confidence.
-  </p>
-
-  {/* <Link to="/courses">
-    <button className="btn btn-primary mt-4">
-      Explore Courses
-    </button>
-  </Link> */}
-</div>
           
+          {/* About Text */}
+          <div className="w-full lg:w-1/2 space-y-6">
+            <h2 className="text-4xl font-bold">
+              Your Future Starts Here
+            </h2>
 
-          {/* About Image */}
-       
+            <p className="text-base-content/80 text-lg leading-relaxed">
+              Discover courses that help you build valuable skills, advance your
+              career, and stay ahead in a rapidly changing world. Learn anytime,
+              anywhere, at your own pace.
+            </p>
+
+            <p className="text-base-content/80 text-lg leading-relaxed">
+              From technology and business to personal development, our learning
+              platform offers high-quality content created by industry experts to
+              help you achieve your goals with confidence.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-6 lg:px-16">
+      <section className="py-16 px-6 lg:px-16 bg-base-100 text-base-content transition-colors duration-300">
         <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6">
           
           <div className="bg-base-200 rounded-xl p-6 text-center shadow-lg">
@@ -127,12 +117,12 @@ const HomePage = () => {
       </section>
 
       {/* Testimonials Carousel */}
-      <section className="px-6 lg:px-16 py-20">
+      <section className="px-6 lg:px-16 py-20 bg-base-200 text-base-content transition-colors duration-300">
         <div className="max-w-5xl mx-auto text-center mb-10">
-          <h2 className="text-4xl font-bold text-white">
+          <h2 className="text-4xl font-bold">
             What Our Learners Say
           </h2>
-          <p className="text-gray-400 mt-4">
+          <p className="text-base-content/70 mt-4">
             Hear from students and industry experts who trust NeoLearn.
           </p>
         </div>
@@ -152,19 +142,19 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto  bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-10 text-center shadow-2xl">
-          <h2 className="text-4xl font-bold text-white">
+      <section className="py-20 px-6 bg-base-100 transition-colors duration-300">
+        <div className="max-w-5xl mx-auto bg-neutral text-neutral-content rounded-3xl p-10 text-center shadow-2xl">
+          <h2 className="text-4xl font-bold">
             Start Learning Today
           </h2>
 
-          <p className="text-white/90 mt-4 text-lg">
+          <p className="text-neutral-content/90 mt-4 text-lg">
             Join thousands of students who are already upgrading their
             skills and advancing their careers.
           </p>
 
           <Link to="/courses">
-            <button className="btn bg-blue-400 hover:bg-blue-600 rounded-md transition-all ease-in-out duration-300 mt-8">
+            <button className="btn btn-primary mt-8">
               Browse Courses
             </button>
           </Link>
