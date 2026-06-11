@@ -74,7 +74,9 @@ const createCourse = async (req, res, next) => {
       }
       await course.save();
         
-        await fs.promises.unlink(req.file.path); 
+         if (fs.existsSync(req.file.path)) {
+             await fs.promises.unlink(req.file.path);
+         }
     }
     await course.save();
     return res.status(201).json({
@@ -121,7 +123,9 @@ const AddLectureToCourseById = async (req, res, next) => {
       public_id: result.public_id,
     };
     
-    await fs.promises.unlink(req.file.path); 
+      if (fs.existsSync(req.file.path)) {
+          await fs.promises.unlink(req.file.path);
+      }
     
   }
   
@@ -230,8 +234,9 @@ const updateCourse = async (req, res, next) => {
 
         await course.save();
 
-    await fs.promises.unlink(req.file.path); 
-
+           if (fs.existsSync(req.file.path)) {
+               await fs.promises.unlink(req.file.path);
+           }
         
       } catch (e) {
         return next(new AppError("Unable to update Thumbnail", 400));

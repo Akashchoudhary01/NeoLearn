@@ -1,4 +1,6 @@
 import AppError from "../utils/error.js";
+import USER from "../models/user.models.js";
+
 import JWT from "jsonwebtoken";
 
 const isLoggedIn = async (req, res, next) => {
@@ -34,16 +36,37 @@ const authorizedRoles = (...roles)=>async(req , res , next) =>{
   next();
 }
 
-const authorizedSubscriber = (req , res , next)=>{
-  const subscription = req?.user?.subscription;
-  const currentUserRole = req?.user?.role;
-  
-  if( currentUserRole !== 'ADMIN' && subscription?.status !== 'active'){
-    return next (new AppError('Please Subscribe to access this route ' , 403));
-  }
-  next();
+const authorizedSubscriber = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const user = await USER.findById(req.user.id);
 
-}
+    if (!user) {
+      return next(
+        new AppError("User not found", 404)
+      );
+    }
+
+    if (
+      user.role !== "ADMIN" &&
+      user.subscription?.status !== "active"
+    ) {
+      return next(
+        new AppError(
+          "Please Subscribe to access this route",
+          403
+        )
+      );
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   isLoggedIn,
   authorizedRoles,
