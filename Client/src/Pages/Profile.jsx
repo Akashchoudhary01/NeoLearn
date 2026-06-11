@@ -7,70 +7,133 @@ import { getUserData } from "../Redux/Slices/AuthSlice";
 import toast from "react-hot-toast";
 
 const Profile = () => {
-    const userData = useSelector((state)=> state?.auth?.data);
-    console.log(userData);
-    const dispatch = useDispatch();
+  const userData = useSelector((state) => state?.auth?.data);
+  const dispatch = useDispatch();
 
- async function HandleCourseUnsubscribe() {
-  const confirmed = window.confirm(
-    "Are you sure you want to cancel your subscription?"
-  );
+  async function HandleCourseUnsubscribe() {
+    const confirmed = window.confirm(
+      "Are you sure you want to cancel your subscription?"
+    );
 
-  if (!confirmed) return;
+    if (!confirmed) return;
 
-  const result = await dispatch(cancelSubscription());
+    const result = await dispatch(cancelSubscription());
 
-  if (result?.payload?.success) {
-    await dispatch(getUserData());
-    toast.success("Subscription cancelled successfully");
+    if (result?.payload?.success) {
+      await dispatch(getUserData());
+      toast.success("Subscription cancelled successfully");
+    }
   }
-}
-    
+
   return (
     <HomeLayout>
-      <div className="min-h-[90vh] flex justify-center items-center text-white">
-        <div className="flex flex-col  justify-center  w-full max-w-md bg-gray-900 text-white p-6 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.4)]">
-            <img src={userData?.avatar?.secure_url}
-            className="w-40 m-auto rounded-full outline-2"
-             alt={userData?.fullName} />
-             <h1 className="text-center text-3xl m-3 italic capitalize">{userData?.fullName}</h1>
-           <div className="space-y-3 mt-4 mx-auto mb-4">
-  <div className="flex gap-2">
-    <span className="font-semibold min-w-27.5">Email:</span>
-    <span className="break-all">{userData?.email}</span>
-  </div>
+      <div className="min-h-[90vh] flex justify-center items-center px-4 py-10">
+        <div className="w-full max-w-4xl bg-gray-900 rounded-3xl shadow-[0_0_30px_rgba(59,130,246,0.25)] overflow-hidden">
 
-  <div className="flex gap-2">
-    <span className="font-semibold min-w-27.5">Role:</span>
-    <span>{userData?.role}</span>
-  </div>
+          {/* Header */}
+          <div className="h-36 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
 
-  <div className="flex gap-2">
-    <span className="font-semibold min-w-27.5">Subscription:</span>
-    <span>
-      {userData?.subscription?.status === "active"
-        ? "Active"
-        : "Inactive"}
-    </span>
-  </div>
-</div>
-             <div className="flex justify-between gap-2 my-3">
-                <Link to={"/password/changePassword"} 
-                className="w-1/2 bg-yellow-500 text-center py-1 px-2 hover:bg-yellow-600 active:scale-95  transition-all ease-in-out duration-300 rounded-md">
-                
-                <button >Change Password</button>
-                </Link>
+          {/* Profile Content */}
+          <div className="px-6 sm:px-10 pb-10 relative">
 
-                <Link to={"/user/editProfile"} 
-                className="w-1/2 bg-blue-500 text-center py-1 px-2 hover:bg-blue-600 active:scale-95  transition-all ease-in-out duration-300 rounded-md">
-                
-                <button>Edit Profile</button>
-                </Link>
-                </div>
-                {userData ?.subscription?.status === "active" &&(
-                   <button onClick={ HandleCourseUnsubscribe} className=" bg-gray-100 text-center py-1 px-2 text-black hover:bg-zinc-300 active:scale-95  transition-all ease-in-out duration-300 rounded-md">Cancel Subscription</button>
-                )}
+            {/* Avatar */}
+            <div className="flex justify-center">
+              <img
+                src={userData?.avatar?.secure_url}
+                alt={userData?.fullName}
+                className="w-36 h-36 rounded-full object-cover border-4 border-gray-900 -mt-16 shadow-lg"
+              />
+            </div>
 
+            {/* Name */}
+            <div className="text-center mt-4">
+              <h1 className="text-3xl font-bold text-white capitalize">
+                {userData?.fullName}
+              </h1>
+
+              <p className="text-gray-400 mt-1">
+                {userData?.role}
+              </p>
+
+              <span
+                className={`inline-block mt-3 px-4 py-1 rounded-full text-sm font-medium ${
+                  userData?.subscription?.status === "active"
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-red-500/20 text-red-400"
+                }`}
+              >
+                {userData?.subscription?.status === "active"
+                  ? "Active Subscription"
+                  : "No Active Subscription"}
+              </span>
+            </div>
+
+            {/* User Details */}
+            <div className="grid sm:grid-cols-2 gap-4 mt-10">
+
+              <div className="bg-gray-800 rounded-xl p-4">
+                <p className="text-gray-400 text-sm">Email</p>
+                <p className="text-white break-all mt-1">
+                  {userData?.email}
+                </p>
+              </div>
+
+              <div className="bg-gray-800 rounded-xl p-4">
+                <p className="text-gray-400 text-sm">Role</p>
+                <p className="text-white mt-1">
+                  {userData?.role}
+                </p>
+              </div>
+
+              <div className="bg-gray-800 rounded-xl p-4">
+                <p className="text-gray-400 text-sm">Subscription</p>
+                <p className="text-white mt-1">
+                  {userData?.subscription?.status === "active"
+                    ? "Active"
+                    : "Inactive"}
+                </p>
+              </div>
+
+              <div className="bg-gray-800 rounded-xl p-4">
+                <p className="text-gray-400 text-sm">Account Type</p>
+                <p className="text-white mt-1">
+                  {userData?.role === "ADMIN"
+                    ? "Administrator"
+                    : "Student"}
+                </p>
+              </div>
+
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid sm:grid-cols-2 gap-4 mt-8">
+
+              <Link
+                to="/password/changePassword"
+                className="bg-yellow-500 hover:bg-yellow-600 text-center py-3 rounded-xl font-semibold transition-all duration-300 active:scale-95"
+              >
+                Change Password
+              </Link>
+
+              <Link
+                to="/user/editProfile"
+                className="bg-blue-500 hover:bg-blue-600 text-center py-3 rounded-xl font-semibold transition-all duration-300 active:scale-95"
+              >
+                Edit Profile
+              </Link>
+
+            </div>
+
+            {/* Cancel Subscription */}
+            {userData?.subscription?.status === "active" && userData?.role !=="ADMIN" && (
+              <button
+                onClick={HandleCourseUnsubscribe}
+                className="w-full mt-6 bg-red-500 hover:bg-red-600 py-3 rounded-xl font-semibold transition-all duration-300 active:scale-95 text-white"
+              >
+                Cancel Subscription
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </HomeLayout>

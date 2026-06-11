@@ -95,7 +95,8 @@ const Checkout = () => {
         );
 
         if (result?.payload?.success) {
-          await dispatch(getUserData());
+          const userResult = await dispatch(getUserData());
+            console.log("Updated User:", userResult);
 
           toast.success(
             "Payment Verified Successfully"

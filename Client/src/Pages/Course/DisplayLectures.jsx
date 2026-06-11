@@ -152,9 +152,11 @@ export default function DisplayLectures() {
         No Lectures Available
       </h1>
 
+{role === "ADMIN" && (
       <p className="text-gray-500 mt-3 text-sm sm:text-base">
         Start by adding your first lecture.
       </p>
+)}
 
       {role === "ADMIN" && (
         <button

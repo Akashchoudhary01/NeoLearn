@@ -1,41 +1,65 @@
-import React, { useEffect } from 'react'
-import HomeLayout from '../../Layout/HomeLayout'
-// import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllCourse } from '../../Redux/Slices/CourseSlice'
-import CourseCard from './CourseCard'
-
+import React, { useEffect } from "react";
+import HomeLayout from "../../Layout/HomeLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCourse } from "../../Redux/Slices/CourseSlice";
+import CourseCard from "./CourseCard";
 
 const Course = () => {
   const dispatch = useDispatch();
 
-  const {courseData} = useSelector((state)=> state.course)
+  const { courseData, loading } = useSelector((state) => state.course);
 
-  async function LoadCourse (){
-    await dispatch(getAllCourse())
-  }
-  useEffect(()=>{
-    // LoadCourse();
+  useEffect(() => {
     dispatch(getAllCourse());
-    // toast.success("Courses Loaded Successfully")
-  } , [dispatch])
+  }, [dispatch]);
+
   return (
     <HomeLayout>
-        <div className='min-h-[90vh] pt-8 pl-20  flex flex-col gap-10  text-white'>
-          <div className='m-10'>
+      <div className="min-h-[90vh] text-white px-4 sm:px-8 lg:px-12 py-10">
+        
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl sm:text-4xl font-bold">
+            Explore Courses Created by{" "}
+            <span className="text-yellow-300">Industry Experts</span>
+          </h1>
 
-            <h1 className='text-2xl mx-0'>Explore the course made by <span className='text-yellow-300'> Industry Expert</span></h1>
-          </div>
-          <div className='mb-8 flex flex-wrap gap-14'>
-            {
-              courseData?.map((element)=>{
-                return <CourseCard key={element._id} data={element}/>  })
-            }
-          </div>
-
+          <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+            Learn from experienced professionals and gain practical skills
+            through high-quality courses designed for real-world success.
+          </p>
         </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-20">
+            <span className="loading loading-spinner loading-lg"></span>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && (!courseData || courseData.length === 0) && (
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-semibold">
+              No Courses Available
+            </h2>
+            <p className="text-gray-400 mt-2">
+              Please check back later.
+            </p>
+          </div>
+        )}
+
+        {/* Course Cards */}
+        {!loading && courseData?.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-8">
+            {courseData.map((course) => (
+              <CourseCard key={course._id} data={course} />
+            ))}
+          </div>
+        )}
+      </div>
     </HomeLayout>
-  )
-}
+  );
+};
 
 export default Course;

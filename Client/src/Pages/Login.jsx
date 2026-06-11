@@ -105,7 +105,6 @@ const Login = () => {
               disabled={loading}
             />
 
-            {/* ✅ Fixed: Changed type from "Login" to "submit" */}
             <button
               type="submit"
               disabled={loading}
@@ -117,13 +116,23 @@ const Login = () => {
             >
               {loading ? "Logging in..." : "Login"}
             </button>
+<div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+  <p className="text-sm text-center sm:text-left">
+    Don't have an account?{" "}
+    <Link to="/signup" className="text-blue-400 hover:underline">
+      Sign up
+    </Link>
+  </p>
 
-            <p className="text-end text-sm">
-              Don't have an account?{" "}
-              <Link to="/signup" className="text-blue-400 hover:underline">
-                Sign up
-              </Link>
-            </p>
+  <p className="text-sm text-center sm:text-right">
+    <Link
+      to="/password/reset"
+      className="text-blue-400 hover:underline"
+    >
+      Forgot Password?
+    </Link>
+  </p>
+</div>
 
           </form>
         </div>

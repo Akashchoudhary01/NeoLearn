@@ -89,18 +89,22 @@ const authSlice = createSlice({
         localStorage.removeItem("role");
         localStorage.removeItem("data");
       })
+  
       .addCase(getUserData.fulfilled, (state, action) => {
-        state.isLoggedIn = true;
+  state.isLoggedIn = true;
 
-        const userData = action.payload?.user || action.payload?.data;
+  const userData =
+    action.payload?.user ||
+    action.payload?.data;
 
-        state.data = userData;
-        state.role = userData?.role || "USER";
+  state.data = userData;
+  state.role = userData?.role || "USER";
 
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("role", state.role);
-        localStorage.setItem("data", JSON.stringify(userData));
-      });
+  localStorage.setItem(
+    "data",
+    JSON.stringify(userData)
+  );
+});
   },
 });
 

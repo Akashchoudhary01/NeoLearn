@@ -1,58 +1,67 @@
 import React from "react";
 import HomeLayout from "../Layout/HomeLayout";
 
-// main image
+// Main Image
 import AboutImg from "../assets/Assets/Images/aboutMainImage.png";
 import Carousel from "../Layout/Carousel.jsx";
-import {CelebrityData} from '../Constants/CelebrityData.js'
+import { CelebrityData } from "../Constants/CelebrityData.js";
 
 const AboutUs = () => {
-
-
   return (
     <HomeLayout>
-      <div className="px-10 py-16 text-white">
-        {/* 🔹 Top Section */}
-        <div className="flex flex-col lg:flex-row items-center gap-10 max-w-7xl mx-auto">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 lg:py-16 text-white">
+        
+        {/* Top Section */}
+        <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-16">
+          
           {/* Left Content */}
-          <div className="lg:w-1/2 space-y-6 px-10">
-            <h1 className="text-4xl font-bold leading-tight">
+          <div className="w-full lg:w-1/2 space-y-5 text-center lg:text-left">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
               Affordable & Quality Learning
             </h1>
 
-            <p className="text-gray-300 text-lg">
-              NeoLearn is a thoughtfully designed learning platform that brings
-              high-quality courses together in one place. With structured
-              content and easy navigation, it helps you build skills at your own
-              pace.
+            <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+              NeoLearn is a thoughtfully designed learning platform that
+              brings high-quality courses together in one place. With
+              structured content and easy navigation, it helps you build
+              skills at your own pace.
             </p>
 
-            <p className="text-gray-300 text-lg">
-              With a balance of clarity and practical exposure, NeoLearn is
-              built for learners who value consistency and real progress.
+            <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+              With a balance of clarity and practical exposure, NeoLearn
+              is built for learners who value consistency and real
+              progress. Learn from industry experts and gain practical
+              knowledge that helps you grow professionally.
             </p>
           </div>
 
           {/* Right Image */}
-          <div className="lg:w-1/2 flex justify-center">
+          <div className="w-full lg:w-1/2 flex justify-center">
             <img
               src={AboutImg}
-              alt="about"
-              className="w-[80%] drop-shadow-2xl"
+              alt="About NeoLearn"
+              className="w-full max-w-xs sm:max-w-md lg:max-w-lg drop-shadow-2xl"
             />
           </div>
         </div>
 
-        {/* 🔹 Carousel Section */}
-        <div className="mt-20 max-w-4xl mx-auto">
-          <div className="carousel w-full">
+        {/* Student Testimonials Section */}
+        <div className="mt-16 lg:mt-24">
+          <div className="text-center mb-8">
+            
+          </div>
 
-            {CelebrityData && CelebrityData.map(celebrity => <Carousel {... celebrity} 
-                                                                    key={celebrity.slideNumber}                              
-                                                                    totalSlide={CelebrityData.length}
-                                                                     />)}
-
-           
+          <div className="max-w-5xl mx-auto">
+            <div className="carousel w-full rounded-xl overflow-hidden">
+              {CelebrityData &&
+                CelebrityData.map((celebrity) => (
+                  <Carousel
+                    {...celebrity}
+                    key={celebrity.slideNumber}
+                    totalSlide={CelebrityData.length}
+                  />
+                ))}
+            </div>
           </div>
         </div>
       </div>

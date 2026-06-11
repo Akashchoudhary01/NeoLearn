@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import HomeLayout from "../Layout/HomeLayout";
 import { isEmailValid } from "../Helpers/regexHelper";
 import AxiosInstance from "../Helpers/AxiosInstance";
+import { FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 
 const ContactUs = () => {
   const [userInput, setUserInput] = useState({
@@ -13,7 +14,6 @@ const ContactUs = () => {
 
   function handleInputChange(e) {
     const { name, value } = e.target;
-    console.log(name, value);
 
     setUserInput({
       ...userInput,
@@ -23,20 +23,24 @@ const ContactUs = () => {
 
   async function handleformSubit(e) {
     e.preventDefault();
+
     if (!userInput.email || !userInput.name || !userInput.message) {
-      toast.error("Every Field in mandatory ! ");
+      toast.error("Every field is mandatory!");
       return;
     }
+
     if (!isEmailValid(userInput.email)) {
-      toast.error("Invalid Email ! ");
+      toast.error("Invalid Email!");
       return;
     }
+
     try {
       const response = AxiosInstance.post("/contact-us", userInput);
+
       toast.promise(response, {
-        loading: "Sending your message ...",
-        success: "Message Send Successfully..",
-        error: "Failed to submit the form ",
+        loading: "Sending your message...",
+        success: "Message sent successfully!",
+        error: "Failed to submit the form",
       });
 
       const contactResponse = await response;
@@ -49,67 +53,97 @@ const ContactUs = () => {
         });
       }
     } catch (error) {
-      toast.error("Operation Failed !");
+      toast.error("Operation Failed!");
       console.log(error);
-      
     }
   }
 
   return (
     <HomeLayout>
-      <div className="flex justify-center items-center h-screen">
-        <div className="w-full max-w-md bg-gray-900 my-4 text-white p-4 rounded-xl shadow-[0_0_25px_rgba(59,130,246,0.4)]">
-          <h1 className="text-2xl justify-self-center tracking-[3px]">
-            Contact us
-          </h1>
+      <div className="min-h-[90vh] flex items-center justify-center px-4 py-10">
+        <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-10">
 
-          <div className="mt-3  ">
+          {/* Left Side */}
+          <div className="text-white flex flex-col justify-center">
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6 mt-3">
+              Get In Touch
+            </h1>
+
+            <p className="text-gray-400 text-lg mb-8">
+              Have questions about our courses or need assistance?
+              We'd love to hear from you. Send us a message and we'll
+              respond as soon as possible.
+            </p>
+
+
+            
+          </div>
+
+          {/* Right Side Form */}
+          <div className="bg-gray-900/90 backdrop-blur-lg text-white p-8 rounded-2xl shadow-[0_0_30px_rgba(59,130,246,0.25)] border border-gray-800">
+            <h2 className="text-3xl font-bold text-center mb-8">
+              Contact Us
+            </h2>
+
             <form
-              action=""
-              className="flex flex-col"
+              className="space-y-5"
               noValidate
               onSubmit={handleformSubit}
             >
-              <div className="mx-2 mb-3 flex flex-col ">
-                <label htmlFor="name">Name</label>
+              <div>
+                <label className="block mb-2 text-gray-300">
+                  Name
+                </label>
+
                 <input
                   type="text"
                   name="name"
                   value={userInput.name}
                   placeholder="Enter your name"
-                  className="bg-gray-800  rounded-md px-2 mt-2 py-1 outline-none border-none"
-                  onChange={handleInputChange}
-                />
-              </div>
-              {/* Email */}
-              <div className="mx-2 flex mb-3 flex-col ">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="text"
-                  placeholder="xyz@gmail.com"
-                  name="email"
-                  value={userInput.email}
-                  className="bg-gray-800 rounded-md px-2 mt-2 py-1 outline-none border-none"
-                  onChange={handleInputChange}
-                />
-              </div>
-              {/* Message */}
-              <div className="mx-2 mb-3 flex flex-col ">
-                <label htmlFor="name">Message</label>
-                <textarea
-                  type="text"
-                  name="message"
-                  value={userInput.message}
-                  className="bg-gray-800 px-2 mt-2 py-1 outline-none resize-none h-40 rounded-md border-none"
+                  className="w-full bg-gray-800 rounded-lg px-4 py-3 outline-none border border-gray-700 focus:border-blue-500 transition"
                   onChange={handleInputChange}
                 />
               </div>
 
-              <button className="px-2 py-2 mx-3 my-2 text-xl rounded-md active:scale-95 bg-blue-500 outline-1 outline-black ">
-                Submit
+              <div>
+                <label className="block mb-2 text-gray-300">
+                  Email
+                </label>
+
+                <input
+                  type="email"
+                  name="email"
+                  value={userInput.email}
+                  placeholder="xyz@gmail.com"
+                  className="w-full bg-gray-800 rounded-lg px-4 py-3 outline-none border border-gray-700 focus:border-blue-500 transition"
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 text-gray-300">
+                  Message
+                </label>
+
+                <textarea
+                  name="message"
+                  value={userInput.message}
+                  placeholder="Write your message..."
+                  rows="6"
+                  className="w-full bg-gray-800 rounded-lg px-4 py-3 outline-none resize-none border border-gray-700 focus:border-blue-500 transition"
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg text-lg font-semibold transition-all duration-300 active:scale-95"
+              >
+                Send Message
               </button>
             </form>
           </div>
+
         </div>
       </div>
     </HomeLayout>

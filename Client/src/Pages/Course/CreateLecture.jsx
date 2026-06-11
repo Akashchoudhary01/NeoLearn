@@ -81,7 +81,7 @@ const CreateLecture = () => {
     <HomeLayout>
       <div className="min-h-[90vh] flex items-center justify-center px-4 py-10 text-white">
         <div className="w-full max-w-5xl bg-gray-900 rounded-2xl p-8 shadow-[0_0_25px_rgba(59,130,246,0.4)]">
-          <h1 className="text-3xl font-bold text-center mb-8">Create Course</h1>
+          <h1 className="text-3xl font-bold text-center mb-8">Create Lecture</h1>
 
           <form onSubmit={handleFormSubmit} noValidate>
             <div className="grid lg:grid-cols-2 gap-10">
@@ -107,7 +107,7 @@ const CreateLecture = () => {
               {/* Right Section */}
               <div className="space-y-5">
                 <div>
-                  <label className="block mb-2 font-medium">Course Title</label>
+                  <label className="block mb-2 font-medium">Lecture Title</label>
 
                   <input
                     type="text"
@@ -136,7 +136,7 @@ const CreateLecture = () => {
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold transition-all active:scale-95"
                 >
-                  Create Course
+                  Create Lecture
                 </button>
               </div>
             </div>

@@ -21,24 +21,23 @@ function Carousel({ image, title, description, slideNumber, totalSlide }) {
         </h2>
       </div>
 
-      {/* Navigation */}
-      <div className="absolute inset-y-1/2 left-0 right-0 flex justify-between px-4">
-        
-        <a
-          href={`#slide${slideNumber === 1 ? totalSlide : slideNumber - 1}`} 
-          className="btn btn-circle"
-        >
-          ❮
-        </a>
+     <div className="absolute left-2 top-1/2 -translate-y-1/2">
+  <a
+    href={`#slide${slideNumber === 1 ? totalSlide : slideNumber - 1}`}
+    className="btn btn-circle btn-sm sm:btn-md"
+  >
+    ❮
+  </a>
+</div>
 
-        <a
-          href={`#slide${(slideNumber) % totalSlide  + 1}`} 
-          className="btn btn-circle"
-        >
-          ❯
-        </a>
-
-      </div>
+<div className="absolute right-2 top-1/2 -translate-y-1/2">
+  <a
+    href={`#slide${(slideNumber % totalSlide) + 1}`}
+    className="btn btn-circle btn-sm sm:btn-md"
+  >
+    ❯
+  </a>
+</div>
     </div>
   );
   

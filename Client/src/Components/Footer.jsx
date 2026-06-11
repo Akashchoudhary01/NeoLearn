@@ -10,34 +10,71 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <div className="text-white px-10 space-y-10 pt-6 bg-gray-800 flex flex-col sm:flex-row justify-between items-center z-50 gap-4">
-      
-      {/* Left Side */}
-      <section className="flex justify-center items-center">
-        <h2 className="text-sm sm:text-lg">
-          © {year} | All Rights Reserved
-        </h2>
-      </section>
+    <footer className="bg-gray-800 text-white py-6 px-4 sm:px-8">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        {/* Copyright */}
+        <div className="text-center md:text-left">
+          <h2 className="text-sm sm:text-base">
+            © {year} NeoLearn. All Rights Reserved.
+          </h2>
+        </div>
 
-      {/* Right Side */}
-      <section className="flex justify-center items-center gap-4 text-xl">
-        <a href="#" className="hover:text-blue-500 transition">
-          <FaFacebookF />
-        </a>
+        {/* Social Links */}
+        <div className="flex items-center gap-5 text-xl">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-500 hover:scale-110 transition-all duration-300"
+          >
+            <FaFacebookF />
+          </a>
 
-        <a href="#" className="hover:text-gray-400 hover:scale-105 transition">
-          <FaGithub />
-        </a>
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-gray-400 hover:scale-110 transition-all duration-300"
+          >
+            <FaGithub />
+          </a>
 
-        <a href="#" className="hover:text-pink-500 transition">
-          <FaInstagram />
-        </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-pink-500 hover:scale-110 transition-all duration-300"
+          >
+            <FaInstagram />
+          </a>
 
-        <a href="#" className="hover:text-blue-400 transition">
-          <FaLinkedinIn />
-        </a>
-      </section>
-    </div>
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-blue-400 hover:scale-110 transition-all duration-300"
+          >
+            <FaLinkedinIn />
+          </a>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-gray-700 mt-6 pt-4">
+        <p className="text-center text-sm text-gray-300">
+          Made with ❤️ by{" "}
+          <a
+            href="https://www.linkedin.com/in/akashchoudhary007/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-400 hover:text-blue-300 font-semibold"
+          >
+            Akash
+          </a>
+        </p>
+      </div>
+    </footer>
   );
 };
 

@@ -83,7 +83,7 @@ const { token } = useParams();
           </form>
 
 <Link to={"/"}>
-          <p >back To Home</p>
+          <p className="flex justify-end text-blue-500 mt-2 text-[12px]" >back To Home</p>
 </Link>
 
       </div>

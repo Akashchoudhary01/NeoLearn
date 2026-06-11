@@ -35,6 +35,7 @@ function App() {
       <Route path='/denied' element={<Denied/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='*' element={<Notfound/>}/>
+      <Route path='/password/reset' element={<ResetPassword/>}/>
 
       <Route element={<RequiredAuth allowedRoles={["ADMIN"]} /> }>
       <Route path='/course/create' element={<CreateCourse/>}/>
@@ -50,7 +51,6 @@ function App() {
       <Route path='/checkout/failed' element={<CheckoutFailed/>}/>
       <Route path='/courses/lecture' element={<DisplayLectures/>}/>
       <Route path='/password/changePassword' element={<ChangePassword/>}/>
-      <Route path='/password/reset' element={<ResetPassword/>}/>
       <Route path="/reset-password/:token"
  element={<ResetPasswordRedirect/>}/>
       </Route>
