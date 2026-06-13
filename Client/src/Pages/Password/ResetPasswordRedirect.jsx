@@ -54,10 +54,10 @@ const { token } = useParams();
             password : ""
         })
         
-        console.log("Password Changed Successfully");
-
+        
         setTimeout(()=>{
-            navigate("/user/profile")
+          navigate("/login")
+          console.log("Password Changed Successfully ! please login with your new Credintial ");
 
         } , 1000)
 
