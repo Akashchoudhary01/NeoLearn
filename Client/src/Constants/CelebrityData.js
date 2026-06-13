@@ -1,10 +1,10 @@
 // carousel images
 // Update these imports to match your files exactly:
-import apj from "../assets/Assets/Image/apj.png";
-import billGates from "../assets/Assets/Image/billGates.png";
-import nelsonMandela from "../assets/Assets/Image/nelsonMandela.png";
-import sj from "../assets/Assets/Image/sj.png";
-import Einstein from "../assets/Assets/Image/einstein.png"; // Changed to lowercase 'e'
+import apj from "../assets/Images/apj.png";
+import billGates from "../assets/Images/billGates.png";
+import nelsonMandela from "../assets/Images/nelsonMandela.png";
+import sj from "../assets/Images/sj.png";
+import Einstein from "../assets/Images/einstein.png"; // Changed to lowercase 'e'
 import Carousel from "../Layout/Carousel";
 
 export const CelebrityData = [

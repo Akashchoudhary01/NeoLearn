@@ -1,6 +1,6 @@
 import React from "react";
 import HomeLayout from "../Layout/HomeLayout";
-import AboutImg from "../assets/Assets/Images/aboutMainImage.png";
+import AboutImg from "../assets/Images/aboutMainImage.png";
 import Carousel from "../Layout/Carousel.jsx";
 import { CelebrityData } from "../Constants/CelebrityData.js";
 

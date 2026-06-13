@@ -1,9 +1,9 @@
 import React from "react";
 import HomeLayout from "../Layout/HomeLayout";
 import { Link } from "react-router-dom";
-import mainImage from "../assets/Assets/Images/main-image.png";
-import mainimage2 from "../assets/Assets/Images/home2.png";
-import AboutImg from "../assets/Assets/Images/aboutMainImage.png";
+import mainImage from "../assets/Images/main-image.png";
+import mainimage2 from "../assets/Images/home2.png";
+import AboutImg from "../assets/Images/aboutMainImage.png";
 import Carousel from "../Layout/Carousel.jsx";
 // import {  } from "../Constants/CelebrityData.js";
 import {StudentData} from '../Constants/StudentData.js'

@@ -1,9 +1,9 @@
 // carousel images
-import student1 from "../assets/Assets/Images/student1.jpg";
-import student2 from "../assets/Assets/Images/student2.jpg";
-import student3 from "../assets/Assets/Images/student3.jpeg";
+import student1 from "../assets/Images/student1.jpg";
+import student2 from "../assets/Images/student2.jpg";
+import student3 from "../assets/Images/student3.jpeg";
 // import student4 from "../assets/Assets/Images/student4.png";
-import student5 from "../assets/Assets/Images/student5.jpg";
+import student5 from "../assets/Images/student5.jpg";
 
 export const StudentData = [
   {
