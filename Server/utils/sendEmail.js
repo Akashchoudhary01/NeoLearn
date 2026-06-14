@@ -1,35 +1,20 @@
-import  nodemailer  from "nodemailer";
+import { Resend } from 'resend';
 
-const sendEmail = async function(email , subject , message){
-    // create reusable transporter object using the default SMTP transport
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-    let transporter = await  nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: true, // true for port 465, false for other ports
-       auth: {
-            user:process.env.SMTP_USERNAME ,
-            pass: process.env.SMTP_PASSWORD,
-  },
-  
-});
-
-// await transporter.verify();
-// console.log("SMTP VERIFIED");
-
-console.log("HOST:", process.env.SMTP_HOST);
-console.log("PORT:", process.env.SMTP_PORT);
-console.log("USER:", process.env.SMTP_USERNAME);
-// async..await is not allowed in global scope, must use a wrapper
-
-// send mail with defined transport object
-
-await transporter.sendMail({
-    from: process.env.SMTP_FROM_EMAIL, // sender address
-    to: email, // list of receivers
-    subject: subject, // Subject 
-    html: message, // html body
-  });
+const sendEmail = async function(email, subject, message) {
+  try {
+    await resend.emails.send({
+      from: 'onboarding@resend.dev', // Replace with your verified domain
+      to: email,
+      subject: subject,
+      html: message,
+    });
+    console.log("Email sent successfully via Resend");
+  } catch (error) {
+    console.error("Resend error:", error);
+    throw error;
+  }
 };
 
 export default sendEmail;
