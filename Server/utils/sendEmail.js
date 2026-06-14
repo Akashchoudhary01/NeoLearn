@@ -1,20 +1,24 @@
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from "nodemailer";
 
 const sendEmail = async function(email, subject, message) {
-  try {
-    await resend.emails.send({
-      from: 'akashkrchoudhary0007@gmail.com', // Replace with your verified domain
-      to: email,
-      subject: subject,
-      html: message,
-    });
-    console.log("Email sent successfully via Resend");
-  } catch (error) {
-    console.error("Resend error:", error);
-    throw error;
-  }
+  // Use Brevo SMTP credentials
+  let transporter = nodemailer.createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false, // true for 465, false for 587
+    auth: {
+      user: process.env.SMTP_USERNAME, // Your Brevo SMTP Login Email
+      pass: process.env.SMTP_PASSWORD, // The SMTP Key you generated
+    },
+  });
+
+  await transporter.sendMail({
+    // IMPORTANT: 'from' must match a registered/verified sender in Brevo
+    from: process.env.SMTP_FROM_EMAIL, 
+    to: email,
+    subject: subject,
+    html: message,
+  });
 };
 
 export default sendEmail;
