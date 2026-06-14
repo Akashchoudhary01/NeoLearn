@@ -4,7 +4,7 @@ import sendEmail from "../utils/sendEmail.js";
 
 const contactUs = async (req, res, next) => {
   const { name, email, message } = req.body;
-
+console.log("ContactUs controller reached!");
   if (!name || !email || !message) {
     return next(
       new AppError("All fields are mandatory", 400)
@@ -30,9 +30,10 @@ const contactUs = async (req, res, next) => {
       success: true,
       message: "Message sent successfully",
     });
-  } catch (e) {
-    return next(new AppError(e.message, 400));
-  }
+ } catch (e) {
+  console.error("Error in contactUs:", e); // <--- Add this
+  return next(new AppError(e.message, 400));
+}
 };
 
 const userStats = async(req , res, next)=>{
