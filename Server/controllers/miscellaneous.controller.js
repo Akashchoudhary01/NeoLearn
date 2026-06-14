@@ -2,28 +2,29 @@ import USER from "../models/user.models.js";
 import AppError from "../utils/error.js";
 import sendEmail from "../utils/sendEmail.js";
 
-const contactUs = async(req , res , next)=>{
-    const {name , email , message} = req.body;
+const contactUs = async (req, res, next) => {
+  console.log("Contact route hit");
 
-    if( !name || !email || !message ){
-        return next(new AppError('All filds are mendatory' , 401));
-    }
+  try {
+    console.log("Before sendEmail");
 
-    try {
-        
-        const subject = "contact-us-form"
-        const textMessage = ` ${name} - ${email} <br/> ${message}`;
-        
-        //await the message send
-        await sendEmail(process.env.CONTACT_US_EMAIL , subject , textMessage);
-    } catch (e) {
-        return next (new AppError(e.message , 400));
-    }
+    await sendEmail(
+      process.env.CONTACT_US_EMAIL,
+      subject,
+      textMessage
+    );
+
+    console.log("After sendEmail");
+
     return res.status(200).json({
-        success : true,
-        message : "message Send Successfully"
+      success: true,
+      message: "message Send Successfully",
     });
-}
+  } catch (e) {
+    console.error(e);
+    return next(new AppError(e.message, 400));
+  }
+};
 
 const userStats = async(req , res, next)=>{
     try {
