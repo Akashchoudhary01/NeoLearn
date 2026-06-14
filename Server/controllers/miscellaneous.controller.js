@@ -3,10 +3,22 @@ import AppError from "../utils/error.js";
 import sendEmail from "../utils/sendEmail.js";
 
 const contactUs = async (req, res, next) => {
-  console.log("Contact route hit");
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return next(
+      new AppError("All fields are mandatory", 400)
+    );
+  }
 
   try {
-    console.log("Before sendEmail");
+    const subject = "contact-us-form";
+
+    const textMessage = `
+      Name: ${name}<br/>
+      Email: ${email}<br/>
+      Message: ${message}
+    `;
 
     await sendEmail(
       process.env.CONTACT_US_EMAIL,
@@ -14,14 +26,11 @@ const contactUs = async (req, res, next) => {
       textMessage
     );
 
-    console.log("After sendEmail");
-
     return res.status(200).json({
       success: true,
-      message: "message Send Successfully",
+      message: "Message sent successfully",
     });
   } catch (e) {
-    console.error(e);
     return next(new AppError(e.message, 400));
   }
 };
