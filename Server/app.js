@@ -9,9 +9,10 @@ import paymentRoute from './routes/payment.route.js'
 import miscellaneousRoute from './routes/miscellaneous.route.js'
 
 export const app = express();
-
+console.log("FRONTEND_URL =", process.env.FRONTEND_URL);
 app.use(urlencoded({extended : true}));
 app.use(express.json());
+
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,

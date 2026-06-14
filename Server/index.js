@@ -1,9 +1,11 @@
-import { configDotenv } from "dotenv";
+import "dotenv/config";
+// import { configDotenv } from "dotenv";
 import { app } from "./app.js";
 import { connectionToDB } from "./config/dbConnection.js";
 import cloudinary from "cloudinary";
 import Razorpay from 'razorpay';
-configDotenv();
+
+// configDotenv();
 
 // Configuration
 cloudinary.v2.config({
