@@ -14,8 +14,8 @@ const sendEmail = async function(email , subject , message){
   
 });
 
-await transporter.verify();
-console.log("SMTP VERIFIED");
+// await transporter.verify();
+// console.log("SMTP VERIFIED");
 
 console.log("HOST:", process.env.SMTP_HOST);
 console.log("PORT:", process.env.SMTP_PORT);
