@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendEmail = async function(email, subject, message) {
   try {
     await resend.emails.send({
-      from: 'onboarding@resend.dev', // Replace with your verified domain
+      from: 'akashkrchoudhary0007@gmail.com', // Replace with your verified domain
       to: email,
       subject: subject,
       html: message,
