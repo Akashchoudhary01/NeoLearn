@@ -14,10 +14,14 @@ app.use(urlencoded({extended : true}));
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://neo-learn-c6bvtoqln-akash-choudharys-projects-65a64267.vercel.app",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
+
+app.get("/", (req, res) => {
+  res.send("Backend Working");
+});
 
 app.use(cookieParser());
 app.use(morgan('dev'));
