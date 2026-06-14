@@ -11,8 +11,15 @@ const sendEmail = async function(email , subject , message){
             user:process.env.SMTP_USERNAME ,
             pass: process.env.SMTP_PASSWORD,
   },
+  
 });
 
+await transporter.verify();
+console.log("SMTP VERIFIED");
+
+console.log("HOST:", process.env.SMTP_HOST);
+console.log("PORT:", process.env.SMTP_PORT);
+console.log("USER:", process.env.SMTP_USERNAME);
 // async..await is not allowed in global scope, must use a wrapper
 
 // send mail with defined transport object
