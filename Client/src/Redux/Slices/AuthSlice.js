@@ -2,12 +2,30 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
 import AxiosInstance from "../../Helpers/AxiosInstance";
 
+const getStoredData = () => {
+  try {
+    const data = localStorage.getItem("data");
+
+    if (!data || data === "undefined") {
+      return {};
+    }
+
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error parsing localStorage data:", error);
+
+    localStorage.removeItem("data");
+    localStorage.removeItem("role");
+    localStorage.removeItem("isLoggedIn");
+
+    return {};
+  }
+};
+
 const InitialState = {
-  isLoggedIn: localStorage.getItem("isLoggedIn") === "true" || false,
+  isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
   role: localStorage.getItem("role") || "",
-  data: localStorage.getItem("data")
-    ? JSON.parse(localStorage.getItem("data"))
-    : {},
+  data: getStoredData(),
   loading: false,
   error: null,
 };
@@ -27,13 +45,15 @@ const authSlice = createSlice({
       .addCase(createAccount.fulfilled, (state, action) => {
         state.loading = false;
         state.isLoggedIn = true;
-        const userData = action.payload.user || action.payload.data;
+
+        const userData = action.payload?.user || action.payload?.data || {};
+
         state.data = userData;
         state.role = userData?.role || "USER";
-        // Store in localStorage if needed
+
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", state.role);
-        localStorage.setItem("data", JSON.stringify(state.data));
+        localStorage.setItem("data", JSON.stringify(userData));
       })
       .addCase(createAccount.rejected, (state, action) => {
         state.loading = false;
@@ -49,13 +69,16 @@ const authSlice = createSlice({
       })
       .addCase(LoginAc.fulfilled, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = "true";
-        const userData = action.payload.user || action.payload.data;
+        state.isLoggedIn = true;
+
+        const userData = action.payload?.user || action.payload?.data || {};
+
         state.data = userData;
         state.role = userData?.role || "USER";
+
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", state.role);
-        localStorage.setItem("data", JSON.stringify(state.data));
+        localStorage.setItem("data", JSON.stringify(userData));
       })
       .addCase(LoginAc.rejected, (state, action) => {
         state.loading = false;
@@ -89,22 +112,19 @@ const authSlice = createSlice({
         localStorage.removeItem("role");
         localStorage.removeItem("data");
       })
-  
+
       .addCase(getUserData.fulfilled, (state, action) => {
-  state.isLoggedIn = true;
+        state.isLoggedIn = true;
 
-  const userData =
-    action.payload?.user ||
-    action.payload?.data;
+        const userData = action.payload?.user || action.payload?.data || {};
 
-  state.data = userData;
-  state.role = userData?.role || "USER";
+        state.data = userData;
+        state.role = userData?.role || "USER";
 
-  localStorage.setItem(
-    "data",
-    JSON.stringify(userData)
-  );
-});
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("role", state.role);
+        localStorage.setItem("data", JSON.stringify(userData));
+      });
   },
 });
 
@@ -142,34 +162,34 @@ export const Logout = createAsyncThunk("/auth/logout", async () => {
   }
 });
 
-
-
 // Update Profile
 export const updateProfile = createAsyncThunk(
   "/user/update/profile",
   async ({ id, formData }, thunkAPI) => {
-    
-      const res = await AxiosInstance.put(`/user/update/${id}`, formData);
-     toast.success(res.data.message);
-      return (await res).data;
-    
+    const res = await AxiosInstance.put(`/user/update/${id}`, formData);
+    toast.success(res.data.message);
+    return (await res).data;
   },
 );
 
 // Async Thunk for Change Password
-export const ChangePasswordThunk = createAsyncThunk("/password/changePassword", async (data) => {
-  // Pass the promise itself to the toast, do not await it first
-  const promise = AxiosInstance.post("/user/changepassword", data);
-  
-  toast.promise(promise, {
-    loading: "Changing password...",
-    success: (res) => res.data?.message || "Success",
-    error: (err) => err.response?.data?.message || "Failed to change password"
-  });
+export const ChangePasswordThunk = createAsyncThunk(
+  "/password/changePassword",
+  async (data) => {
+    // Pass the promise itself to the toast, do not await it first
+    const promise = AxiosInstance.post("/user/changepassword", data);
 
-  const res = await promise;
-  return res.data;
-});
+    toast.promise(promise, {
+      loading: "Changing password...",
+      success: (res) => res.data?.message || "Success",
+      error: (err) =>
+        err.response?.data?.message || "Failed to change password",
+    });
+
+    const res = await promise;
+    return res.data;
+  },
+);
 
 //Async thunk for forgot password
 
@@ -183,18 +203,17 @@ export const ForgotPasswordThunk = createAsyncThunk(
         loading: "Sending Email...",
         success: (res) =>
           res.data?.message || "Reset password mail sent successfully",
-        error: (err) =>
-          err.response?.data?.message || "Failed to send email",
+        error: (err) => err.response?.data?.message || "Failed to send email",
       });
 
       const response = await request;
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error?.response?.data?.message || "Something went wrong"
+        error?.response?.data?.message || "Something went wrong",
       );
     }
-  }
+  },
 );
 
 // Reset Password Thunk
@@ -202,22 +221,19 @@ export const resetPassword = createAsyncThunk(
   "/password/reset-password",
   async ({ token, password }, { rejectWithValue }) => {
     try {
-      const res = await AxiosInstance.post(
-        `/user/reset/${token}`,
-        { password }
-      );
+      const res = await AxiosInstance.post(`/user/reset/${token}`, {
+        password,
+      });
 
       toast.success(res.data.message);
 
       return res.data;
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Failed to reset password"
-      );
+      toast.error(error?.response?.data?.message || "Failed to reset password");
 
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 // fetch new userData
 export const getUserData = createAsyncThunk("user/details", async () => {
@@ -228,6 +244,5 @@ export const getUserData = createAsyncThunk("user/details", async () => {
     toast.error(error.message);
   }
 });
-
 
 export default authSlice.reducer;
